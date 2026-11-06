@@ -90,8 +90,8 @@ We have not found the mechanism.
 harness reports of Bjarnason et al. from their public dataset
 (huggingface.co/datasets/ASSERT-KTH/agentic-evals-artifacts, CC BY 4.0) and keeps the ids of the resolved tasks: 12
 configurations of 10 runs each over 500 tasks. analysis/s38/swe_pertask_luck.py takes each task's success rate p across
-the m runs of a configuration and predicts the variance of a run's number of resolved tasks as the sum over tasks of p(1
-- p), times m/(m - 1) for the small sample. Pooled over the 12 configurations, the predicted variance is 86% of the
+the m runs of a configuration and predicts the variance of a run's number of resolved tasks as the sum over tasks of
+p(1 - p), times m/(m - 1) for the small sample. Pooled over the 12 configurations, the predicted variance is 86% of the
 observed one; redrawing runs under pure per-task luck with the same p (a parametric bootstrap, 4,000 draws, seed 0)
 gives a 90% band of 81% to 127% for this share. Per configuration the share is 51% to 200%, and the observed run SD is
 0.75 to 1.76 points of resolution rate. In each configuration 100 to 331 tasks are never solved and 144 to 309 are

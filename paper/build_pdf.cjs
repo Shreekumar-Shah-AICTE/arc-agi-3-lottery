@@ -52,6 +52,7 @@ body += '\n\n## Appendix D. The sealed tests in full\n\n' + table('tD_sealed.md'
 body += '\n\n## Appendix E. More detail on Sections 4.3 and 4.6 to 4.8\n\n' + table('tE_detail.md').replace(/<!--[\s\S]*?-->/g, '');
 const css = `body{font-family:'Liberation Serif','Times New Roman',serif;font-size:10.5pt;line-height:1.38;max-width:7.1in;margin:0 auto;color:#111}
 h1{font-size:17pt;margin:0 0 4pt} h2{font-size:13pt;margin:16pt 0 4pt;border-bottom:1px solid #ccc} h3{font-size:11pt;margin:12pt 0 3pt}
+h1,h2,h3{break-after:avoid;page-break-after:avoid}
 p{margin:5pt 0;text-align:justify} li{margin:2pt 0} figure{margin:10pt 0;page-break-inside:avoid} img{max-width:100%;max-height:6.8in;display:block;margin:0 auto}
 pre{font-size:8.2pt;line-height:1.3;white-space:pre-wrap;margin:6pt 0} figcaption{font-size:9pt;color:#333} table{border-collapse:collapse;font-size:7.6pt;margin:6pt 0} td,th{border:1px solid #bbb;padding:2pt 3pt;vertical-align:top}
 .draft{color:#a00;font-size:9pt;border:1px solid #a00;padding:4pt;margin-bottom:8pt}`;
