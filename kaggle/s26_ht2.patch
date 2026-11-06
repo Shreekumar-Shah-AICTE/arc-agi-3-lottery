@@ -1,0 +1,225 @@
+diff --git a/ARC3-Inference/inference/agent/tool_agent.py b/ARC3-Inference/inference/agent/tool_agent.py
+index 7f08d23..e5af5bb 100644
+--- a/ARC3-Inference/inference/agent/tool_agent.py
++++ b/ARC3-Inference/inference/agent/tool_agent.py
+@@ -3515,6 +3515,67 @@ _SDT_LEVEL1 = (
+     "through visual hints. The solution is likely simple. You may be overlooking key visual cues, "
+     "overthinking the problem, or getting stuck in tunnel vision."
+ )
++def _ht_k() -> int:
++    """S22 HT arm (fresh-eyes analysts), stacked on SDT.
++
++    Per-game outcomes of near-identical builds swing hugely (best-of-2 plays
++    55.91 vs mean 49.49 on FB25, S20 G4): a stalled level is often an anchored
++    hypothesis, and the one allowed play gives no second draw. RB bought the
++    draw by rolling the level back and lost (D56). HT buys only the second
++    opinion: at every SDT fire, ARC3_HT_K independent requests with a FRESH
++    context (short system prompt, no conversation history) get a level dossier
++    (harness record, per-action effect table, the agent's memory notes, the
++    level's first board and the current board) and each answers through a
++    different lens. Their short answers are appended to the SDT text. Nothing
++    else changes; the tokens are charged to the game (count_toward_turn=False).
++    """
++    if not _sdt_enabled():
++        return 0
++    return max(0, min(4, _get_env_int("ARC3_HT_K", 0)))
++
++
++def _ht_thinking() -> bool:
++    """S26 HT2: whether the analyst requests think before answering.
++
++    S22 HT let them think, and 13 of 14 fires hit the 2 x 12,000-token cap after
++    ~400 s with no answer (D70), so the mechanism never reached the agent. HT2
++    sets ARC3_HT_THINKING=0: a direct answer in a few hundred tokens. Unset keeps
++    the S22 request byte-identical.
++    """
++    return _get_env_bool("ARC3_HT_THINKING", True)
++
++
++_HT_SYSTEM = (
++    "You are an expert player of novel grid puzzle games (64x64 boards, 16 colors, one controllable "
++    "game with several levels; every level is solvable in a few dozen actions by a human seeing it for "
++    "the first time). Another agent is stuck on a level. You get a factual dossier and give a fresh, "
++    "independent diagnosis. You cannot act or run code. Reason concisely and then answer in at most "
++    "180 words in exactly the requested format."
++)
++# S26 HT2 (no thinking): same text, but ask for the answer directly so no visible preamble eats the cap.
++_HT_SYSTEM_NT = _HT_SYSTEM.replace(
++    "Reason concisely and then answer in at most 180 words in exactly the requested format.",
++    "Answer directly, without preamble, in at most 180 words in exactly the requested format.",
++)
++_HT_LENSES = (
++    "Lens: the GOAL. Ignore the agent's beliefs at first and ask what the board itself signals as the "
++    "target (indicator boxes, matching shapes or colors, outlines, exits, counters). Then check the "
++    "agent's notes against that.",
++    "Lens: the CONTROLS and OBJECTS. Look at the per-action effects, the actions that were never used or "
++    "changed nothing, and objects nobody interacted with. Which mechanic is the agent most likely "
++    "missing or misreading?",
++    "Lens: the FIRST BOARD versus the CURRENT BOARD. What differs, what never changed, and what does "
++    "that say about what the level wants?",
++    "Lens: SIMPLICITY. Assume the solution is short and the agent is overthinking. What is the most "
++    "obvious thing to try that the record shows was not tried?",
++)
++_HT_ASK = (
++    "Answer format:\nGOAL: <what completes this level>\nMISSED: <the mechanic, cue or object the agent "
++    "most likely missed>\nTEST: <at most 10 actions, using the action names above, and what you expect to "
++    "see if you are right>"
++)
++
++
+ _SDT_LATER = (
+     "You are having trouble with this level. This is a strong signal that you are probably missing "
+     "something important, because every level should be solvable in a single attempt.\n\n"
+@@ -6857,6 +6918,138 @@ class ToolAgent:
+             )
+         return record + "\n\n" + head + "\n\n" + steps
+ 
++    def _ht_dossier(self, solver: Any, rec: dict, level: int, level_tokens: int) -> str:
++        entries = list(getattr(solver, "history_entries", None) or [])
++        level_entries: list[Any] = []
++        first = None
++        for entry in reversed(entries):
++            result = getattr(entry, "result", None) or {}
++            if not result or result.get("level_completed"):
++                first = getattr(entry, "frame", None)
++                break
++            level_entries.append(entry)
++        level_entries.reverse()
++        prev = first
++        eff: dict[str, list[int]] = {}
++        boxes: dict[str, list[int]] = {}
++        clicks: list[str] = []
++        for entry in level_entries:
++            result = getattr(entry, "result", None) or {}
++            frame = getattr(entry, "frame", None)
++            name = str(result.get("action_name") or getattr(entry, "action", "") or "?")
++            label = to_model_action(name) or name
++            if label.upper() == "RESET" or frame is None:
++                prev = frame
++                continue
++            changed = 0
++            box = None
++            if prev is not None:
++                for r, (ra, rb) in enumerate(zip(prev.grid, frame.grid)):
++                    for c, (a, b) in enumerate(zip(ra, rb)):
++                        if a != b:
++                            changed += 1
++                            box = [r, c, r, c] if box is None else [min(box[0], r), min(box[1], c), max(box[2], r), max(box[3], c)]
++            if result.get("game_over"):
++                label_key = label + " (game over)"
++            else:
++                label_key = label
++            eff.setdefault(label_key, []).append(changed)
++            if box is not None:
++                ob = boxes.get(label_key)
++                boxes[label_key] = box if ob is None else [min(ob[0], box[0]), min(ob[1], box[1]), max(ob[2], box[2]), max(ob[3], box[3])]
++            if label == "MOUSE" and len(clicks) < 12:
++                data = result.get("action_data") or {}
++                clicks.append(f"({data.get('row', data.get('y', '?'))},{data.get('col', data.get('x', '?'))}): {changed} cells")
++            prev = frame
++        rows = []
++        for key, vals in sorted(eff.items(), key=lambda kv: -len(kv[1])):
++            zero = sum(1 for v in vals if v == 0)
++            b = boxes.get(key)
++            rows.append(f"- {key}: {len(vals)}x, mean {sum(vals) / max(1, len(vals)):.0f} cells changed, "
++                        f"{zero} changed nothing" + (f", changes inside rows {b[0]}-{b[2]} cols {b[1]}-{b[3]}" if b else ""))
++        notes = []
++        know = getattr(self, "_summarized_knowledge", None) or {}
++        for key, label in (("goal_model", "Goal model"), ("world_model", "World model"), ("action_model", "Action model"),
++                           ("current_plan", "Plan"), ("open_questions", "Open questions")):
++            value = str(know.get(key, "") or "").strip()
++            if value:
++                notes.append(f"- {label}: {value[:1200]}")
++        cur = None
++        try:
++            cur = solver.current_frame()
++        except Exception:
++            cur = level_entries[-1].frame if level_entries else None
++        valid = [v for v in (getattr(self, "_current_valid_actions", None) or [])]
++        parts = [
++            f"Level {level} of the game. Levels already completed in this game: {max(0, level - 1)}.",
++            "Valid actions: " + (", ".join(valid) if valid else "unknown") +
++            " (MOUSE = click a cell given as (row, col); rows and cols count from 0 at the top left).",
++            self._sdt_text(rec, level, level_tokens, "tokens").split("\n\n")[0],
++            "Effect of each action on this level (cells that differ from the board before it):",
++            "\n".join(rows) if rows else "- no actions yet",
++        ]
++        if clicks:
++            parts.append("Some clicks: " + "; ".join(clicks))
++        parts.append("The stuck agent's own notes (they may contain the error):\n" + ("\n".join(notes) if notes else "- none"))
++        if first is not None:
++            parts.append("First board of this level (one letter per cell):\n" + first.ascii)
++        if cur is not None:
++            parts.append("Current board:\n" + cur.ascii)
++        return "\n\n".join(parts)
++
++    def _ht_consult(self, solver: Any, rec: dict, level: int, level_tokens: int) -> str:
++        k = _ht_k()
++        if k <= 0:
++            return ""
++        t0 = time.time()
++        dossier = self._ht_dossier(solver, rec, level, level_tokens)
++        answers: list[str] = []
++        tokens = 0
++        for i in range(k):
++            messages = [
++                {"role": "system", "content": _HT_SYSTEM if _ht_thinking() else _HT_SYSTEM_NT},
++                {"role": "user", "content": dossier + "\n\n" + _HT_LENSES[i % len(_HT_LENSES)] + "\n\n" + _HT_ASK},
++            ]
++            try:
++                result = self._chat_completion(
++                    messages, tools=None,
++                    max_tokens=max(1000, _get_env_int("ARC3_HT_MAX_TOKENS", 12000)),
++                    request_timeout_seconds=float(max(30, _get_env_int("ARC3_HT_TIMEOUT_S", 420))),
++                    enable_thinking=None if _ht_thinking() else False,
++                )
++            except BaseException as exc:  # an analyst must never end the turn
++                log.warning("#OURS_HT request failed: %r", exc)
++                continue
++            usage = getattr(result, "usage", None)
++            self._accumulate_usage_tokens(usage, count_toward_turn=False)
++            try:
++                tokens += int((usage or {}).get("completion_tokens") or 0)
++            except Exception:
++                pass
++            text = _normalize_message_content((result.message or {}).get("content", "")).strip()
++            text = re.sub(r"(?s)<think>.*?</think>", "", text).strip()
++            goal_at = text.find("GOAL:")
++            if goal_at > 0:  # S26 HT2: drop any preamble before the requested format
++                text = text[goal_at:]
++            if len(text) >= 40:
++                answers.append(text[:1400])
++        event = {"event": "ht", "game": str(getattr(self, "_session_runtime_dir", "")), "level": level,
++                 "k": k, "ok": len(answers), "tokens": tokens, "dossier_chars": len(dossier),
++                 "thinking": _ht_thinking(),
++                 "secs": round(time.time() - t0, 1), "t": time.time()}
++        _sdt_log_event(event)
++        log.warning("#OURS_HT %s", json.dumps(event, default=str))
++        if not answers:
++            return ""
++        body = "\n\n".join(f"Analyst {j + 1}:\n{a}" for j, a in enumerate(answers))
++        return (
++            f"[Fresh-eyes analysts] {len(answers)} independent analyst(s) (same model, fresh context, no access to "
++            "your reasoning; they saw only the harness record, a per-action effect table, your memory notes, this "
++            "level's first board and the current board) wrote:\n\n" + body +
++            "\n\nThey saw less than you did and may be wrong. Check each against your evidence, then test the "
++            "cheapest proposal you have not already ruled out."
++        )
++
+     def _sdt_maybe_intervene(self, step_env: Any) -> None:
+         """S22 SDT arm (see _sdt_enabled). Runs at the start of every analyzer turn."""
+         if not _sdt_enabled() or getattr(self, "_sdt_disabled", False):
+@@ -6926,6 +7119,13 @@ class ToolAgent:
+         except Exception:
+             pass
+         text = self._sdt_text(rec, level, level_tokens, reason)
++        try:
++            ht_text = self._ht_consult(solver, rec, level, level_tokens)
++        except Exception as exc:
++            ht_text = ""
++            log.warning("#OURS_HT error %r", exc)
++        if ht_text:
++            text = text + "\n\n" + ht_text
+         base_notice = getattr(self, "_retained_clear_notice", "") or ""
+         self._retained_clear_notice = (text + ("\n\n" + base_notice if base_notice else "")).strip()
+         self._sdt_count += 1

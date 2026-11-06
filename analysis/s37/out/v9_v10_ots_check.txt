@@ -1,0 +1,12 @@
+OpenTimestamps upgrade for the V9 and V10 sealed files (4 Nov 2026 ~18:58 UTC, ots upgrade, opentimestamps-client)
+Block headers checked against blockstream.info (block-height -> block: id, merkle_root, timestamp).
+v9_arc2_private_lb_prediction.txt sha256 1fffeeef7e1bed48f4cccb4dc39a4a5cac1f7a62d52121df26c6ad853f320945 (matches .sha256)
+  committed 099cbc1 2026-11-04T16:54:11Z
+  ots: Success, timestamp complete; BitcoinBlockHeaderAttestation block 974554
+  block 974554 hash 0000000000000000000055f4265128291941e0ed0549c3955baa8bae6a58266f time 2026-11-04T17:27:39Z merkle root fc5dcc13b12d5cd1... (matches the proof)
+v10_supply_prediction.txt sha256 201362a8a05298a398d74a8af82a19394c7abebd6378a97d31a8de5f5ba1aae9 (matches .sha256)
+  committed 5709c04 2026-11-04T16:42:01Z
+  ots: Success, timestamp complete; BitcoinBlockHeaderAttestation blocks 974553 and 974554
+  block 974553 hash 00000000000000000000bfafcc27ffaa40831f430bb85bc6cfbb1e61012e1e99 time 2026-11-04T17:31:32Z merkle root 313e3a252b5dbabd... (matches the proof)
+  block 974554 as above (time 2026-11-04T17:27:39Z; Bitcoin block times are not strictly increasing)
+Full check without trusting us: `ots verify <file>.ots` with a Bitcoin node.

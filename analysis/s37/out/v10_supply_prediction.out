@@ -1,0 +1,18 @@
+V10: FB25 control with speculative decoding off; 25 public games x 121 min, 10 streams.
+Conditional prediction, given the measured supply ratio r = total generated tokens / control mean:
+  r     levels  90% band   (control runs at m = r: mean, observed SD)
+  0.40    48.2    41.6- 54.9   (48.2, 3.3)
+  0.45    57.8    50.4- 65.1   (57.8, 1.5)
+  0.50    65.0    57.2- 72.8   (65.0, 1.4)
+  0.55    69.2    61.2- 77.3   (69.2, 2.8)
+  0.60    77.2    68.8- 85.7   (77.2, 3.9)
+  0.65    81.5    72.3- 90.7   (81.5, 5.0)
+  0.70    85.5    76.2- 94.8   (85.5, 5.1)
+  0.75    88.2    79.2- 97.3   (88.2, 4.5)
+  0.80    91.8    81.7-101.8   (91.8, 5.4)
+  0.85    95.2    83.9-106.6   (95.2, 6.2)
+  0.90    97.2    86.9-107.6   (97.2, 5.6)
+  0.95   101.0    91.3-110.7   (101.0, 5.0)
+  1.00   102.8    92.7-112.8   (102.8, 5.4)
+Unconditional (prior r 0.55-0.9): levels 61 to 108; control (r = 1) 102.8.
+Rule: token-time equivalence SUPPORTED if observed levels fall inside the band at the measured r; levels above the band = the agent is not token-limited at this supply; below = slower serving costs more than its tokens.

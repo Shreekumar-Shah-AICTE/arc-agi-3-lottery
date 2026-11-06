@@ -1,0 +1,22 @@
+(1) timing
+  endgame: the bonus for games with levels left fades over the last 40% of the per-game budget, from minute 72.6 at 121 min and from minute 145.2 at 242 min
+  6 games stuck at 1x (bp35, lf52, s5i5, sk48, sp80, wa30): controls at their end (121 min) [8, 7, 4, 4] (mean 5.75); V5 by minute 72.6 6, by minute 121 13, at the end 22
+  other 19 games: controls at their end (121 min) [98, 88, 99, 103] (mean 97.00); V5 by minute 72.6 76, by minute 121 92, at the end 119
+  all games: controls by minute 72.6 [76, 74, 76, 83]; V5 by minute 72.6 82
+(2) supply after minute 121 (pooled model, walls permanent)
+  all 25 games: gain after minute 121 predicted 38.5 given the tokens generated, observed 36
+  stuck games: gain after minute 121 predicted 16.1 given the tokens generated, observed 9
+  other games: gain after minute 121 predicted 22.5 given the tokens generated, observed 27
+(3) observed vs expected clears by token band (pooled model hazard over each attempt's exposure)
+  controls: attempts 480; 0-50k O 344 E 354.4; 50-100k O 58 E 51.3; 100-150k O 8 E 6.6; 150k+ O 1 E 0.9; all O 411 E 413.3
+  V5: attempts 155; 0-50k O 104 E 126.2; 50-100k O 24 E 26.0; 100-150k O 7 E 6.5; 150k+ O 6 E 2.9; all O 141 E 161.6
+  V5 attempts past 150k tokens: 12; clears 6 vs expected 2.9; Poisson P(>= 6) = 0.073
+(4) state when the second half starts: the sealed method continued the control runs' end states (after their endgame)
+  b12_fb25: games complete at minute 72.6 2, at minute 121 8; open attempts 17, mean age 85.0k tokens, expected walls 6.4; sealed method from this state (second-half tokens 1.35x first-half): +25.0 levels
+  b28_ctl_fb25: games complete at minute 72.6 1, at minute 121 7; open attempts 18, mean age 100.0k tokens, expected walls 7.9; sealed method from this state (second-half tokens 1.35x first-half): +27.1 levels
+  b32_ctl_r2: games complete at minute 72.6 2, at minute 121 8; open attempts 17, mean age 89.3k tokens, expected walls 6.8; sealed method from this state (second-half tokens 1.35x first-half): +24.9 levels
+  b32_ctl_r3: games complete at minute 72.6 3, at minute 121 8; open attempts 17, mean age 77.2k tokens, expected walls 5.9; sealed method from this state (second-half tokens 1.35x first-half): +24.4 levels
+  V5 at minute 121: games complete at minute 72.6 3, at minute 121 3; open attempts 22, mean age 53.0k tokens, expected walls 5.5; sealed method from this state (second-half tokens 1.35x first-half): +42.9 levels
+(5) the 1x endgame window (minute 72.6 to 121): levels and tokens of the stuck and other games
+  stuck games: controls levels at 72.6 -> 121 5->8, 6->7, 3->4, 3->4; tokens in the window 0.52M, 0.45M, 0.25M, 0.21M | V5 6->13, tokens 0.74M
+  other games: controls levels at 72.6 -> 121 71->98, 68->88, 73->99, 80->103; tokens in the window 1.30M, 1.25M, 1.48M, 1.54M | V5 76->92, tokens 1.03M

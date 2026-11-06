@@ -1,0 +1,4 @@
+H0: mean total   99.6 (between worlds SD  2.6); run-to-run SD within a world: mean 12.3, 10-90% 10.7-13.8
+H1: mean total  106.2 (between worlds SD  7.1); run-to-run SD within a world: mean 11.1, 10-90%  9.4-12.8
+H2: mean total  106.1 (between worlds SD 10.1); run-to-run SD within a world: mean  5.6, 10-90%  3.9- 7.4
+observed: mean 102.5, run-to-run SD 5.3 (six runs; 90% CI for an SD from 6 runs ~ x0.67 to x2.1)

@@ -1,0 +1,13 @@
+nano-agent-Qwen_Qwen3-32B: 10 runs, mean 16.38%, SD 0.75 pp observed vs 1.05 predicted, per-task share 2.0 (null 90% [0.54, 2.7]), never 329, sometimes 150, always 21
+nano-agent-Qwen_Qwen3-32B-temp0: 10 runs, mean 16.36%, SD 1.17 pp observed vs 1.04 predicted, per-task share 0.78 (null 90% [0.55, 2.77]), never 331, sometimes 144, always 25
+nano-agent-agentica-org_DeepSWE-Preview: 10 runs, mean 31.38%, SD 1.02 pp observed vs 1.4 predicted, per-task share 1.87 (null 90% [0.53, 2.73]), never 210, sometimes 258, always 32
+nano-agent-agentica-org_DeepSWE-Preview__temp0: 10 runs, mean 20.36%, SD 0.96 pp observed vs 1.19 predicted, per-task share 1.56 (null 90% [0.54, 2.72]), never 288, sometimes 190, always 22
+nano-agent-mistral_devstral-2512: 10 runs, mean 63.54%, SD 1.13 pp observed vs 1.15 predicted, per-task share 1.03 (null 90% [0.53, 2.75]), never 103, sometimes 181, always 216
+nano-agent-mistral_devstral-2512__temp0: 10 runs, mean 63.82%, SD 1.64 pp observed vs 1.17 predicted, per-task share 0.51 (null 90% [0.54, 2.75]), never 100, sometimes 190, always 210
+r2e-gym-Qwen_Qwen3-32B: 10 runs, mean 23.9%, SD 1.45 pp observed vs 1.34 predicted, per-task share 0.86 (null 90% [0.52, 2.8]), never 243, sometimes 239, always 18
+r2e-gym-Qwen_Qwen3-32B__temp0: 10 runs, mean 22.32%, SD 1.76 pp observed vs 1.33 predicted, per-task share 0.57 (null 90% [0.53, 2.7]), never 253, sometimes 225, always 22
+r2e-gym-agentica-org__DeepSWE-preview: 10 runs, mean 34.44%, SD 1.54 pp observed vs 1.35 predicted, per-task share 0.78 (null 90% [0.52, 2.68]), never 208, sometimes 243, always 49
+r2e-gym-agentica-org__DeepSWE-preview__temp0: 10 runs, mean 19.16%, SD 1.49 pp observed vs 1.13 predicted, per-task share 0.57 (null 90% [0.53, 2.63]), never 295, sometimes 174, always 31
+r2e-gym-mistral_devstral-2512: 10 runs, mean 34.94%, SD 1.49 pp observed vs 1.53 predicted, per-task share 1.05 (null 90% [0.54, 2.85]), never 167, sometimes 306, always 27
+r2e-gym-mistral_devstral-2512__temp0: 10 runs, mean 35.36%, SD 1.7 pp observed vs 1.55 predicted, per-task share 0.83 (null 90% [0.53, 2.69]), never 163, sometimes 309, always 28
+pooled over 12 configurations (120 runs): per-task share 0.86 (null 90% [0.81, 1.27]); per configuration 0.51 to 2.0

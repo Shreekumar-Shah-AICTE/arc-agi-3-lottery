@@ -1,0 +1,175 @@
+diff --git a/ARC3-Inference/inference/agent/tool_agent.py b/ARC3-Inference/inference/agent/tool_agent.py
+index 88457f7..d9444bc 100644
+--- a/ARC3-Inference/inference/agent/tool_agent.py
++++ b/ARC3-Inference/inference/agent/tool_agent.py
+@@ -3470,6 +3470,48 @@ class _ChatCompletionResult:
+     served_by: str = ""
+ 
+ 
++def _get_env_str_rb(name: str, default: str) -> str:
++    value = os.environ.get(name)
++    return default if value is None or not value.strip() else value.strip()
++
++
++def _rb_enabled() -> bool:
++    """S20 RB arm: level-start checkpoint rollback on a stalled level.
++
++    Per-game outcomes swing between near-identical builds (B12-FB25 vs LEN-FB25:
++    ft09 6 vs 4 levels, g50t 0 vs 4, ka59 5 vs 2, re86 5 vs 7, sc25 4 vs 6), so a
++    stalled level is often a bad path, not a hard level. After ARC3_RB_TOKENS
++    generated tokens on one level attempt, the harness RESETs the level and
++    restores the conversation, retained functions and memory sections to their
++    state at the level start: a second, independent attempt from the same
++    knowledge. Actions keep counting; a level that stays stuck scores 0 anyway.
++    """
++    return _get_env_bool("ARC3_RB", False)
++
++
++def _rb_tokens() -> int:
++    return max(1000, _get_env_int("ARC3_RB_TOKENS", 50000))
++
++
++def _rb_max() -> int:
++    return max(0, _get_env_int("ARC3_RB_MAX", 2))
++
++
++def _rb_min_remaining_frac() -> float:
++    return max(0.0, _get_env_float("ARC3_RB_MIN_REMAINING_FRAC", 0.15))
++
++
++def _rb_log_event(event: dict) -> None:
++    try:
++        path = os.environ.get("ARC3_RB_LOG", "/kaggle/working/rb_events.jsonl")
++        if not path:
++            return
++        with open(path, "a", encoding="utf-8") as f:
++            f.write(json.dumps(event, default=str) + "\n")
++    except Exception:
++        pass
++
++
+ class ToolAgent:
+     """Direct tool-calling analyzer compatible with OpenAI-style endpoints."""
+ 
+@@ -6717,6 +6759,109 @@ class ToolAgent:
+         self._note_history_evicted()
+         return [system_message, *history]
+ 
++    def _rb_take_snapshot(self) -> None:
++        import copy as _rb_copy
++        self._rb_snapshot = {
++            "history_messages": list(self._history_messages),
++            "last_step_summary": _rb_copy.deepcopy(self._last_step_summary),
++            "last_action_call_result": _rb_copy.deepcopy(self._last_action_call_result),
++            "summarized_knowledge": _rb_copy.deepcopy(self._summarized_knowledge),
++            "kept_functions": dict(getattr(self, "_kept_functions", None) or {}),
++            "retained_clear_notice": getattr(self, "_retained_clear_notice", ""),
++            "pending_wm_rebuild_reason": getattr(self, "_pending_wm_rebuild_reason", ""),
++            "pending_wm_revise_reason": getattr(self, "_pending_wm_revise_reason", ""),
++            "turns_without_wm_update": getattr(self, "_turns_without_wm_update", 0),
++        }
++
++    def _rb_maybe_rollback(self, step_env: Any) -> None:
++        """S20 RB arm (see _rb_enabled). Runs at the start of every analyzer turn."""
++        if not _rb_enabled() or getattr(self, "_rb_disabled", False):
++            return
++        mark = (self._session_runtime_dir, getattr(self, "_tokens_at_level_start", 0))
++        if getattr(self, "_rb_mark", None) != mark:
++            # first turn on a new level (or a new game): this is the checkpoint
++            prev = getattr(self, "_rb_mark", None)
++            if prev is not None and prev[0] == mark[0] and getattr(self, "_rb_count", 0) > 0:
++                _rb_log_event({
++                    "event": "cleared_after_rb", "game": str(self._session_runtime_dir),
++                    "rollbacks": self._rb_count,
++                    "tokens_since_rb": self._session_generated_tokens - self._rb_attempt_tokens0,
++                    "t": time.time(),
++                })
++            self._rb_mark = mark
++            self._rb_attempt_tokens0 = self._session_generated_tokens
++            self._rb_count = 0
++            self._rb_take_snapshot()
++            return
++        if getattr(self, "_resume_after_yield", False):
++            return  # mid-turn resumption: wait for a clean turn boundary
++        if self._rb_count >= _rb_max():
++            return
++        spent = self._session_generated_tokens - self._rb_attempt_tokens0
++        if spent < _rb_tokens():
++            return
++        solver = getattr(step_env, "__self__", None)
++        if solver is None or not hasattr(solver, "_execute_auto_reset"):
++            self._rb_disabled = True
++            return
++        remaining = None
++        try:
++            cap = getattr(solver.solver, "max_runtime_s_per_game", None)
++            if cap:
++                remaining = float(solver.started_at) + float(cap) - time.monotonic()
++                soft = solver.solver.soft_time_remaining_seconds()
++                if soft is not None:
++                    remaining = min(remaining, float(soft))
++                if remaining < _rb_min_remaining_frac() * float(cap):
++                    return
++        except Exception:
++            remaining = None
++        if callable(getattr(solver, "should_stop", None)) and solver.should_stop():
++            return
++        level_actions = None
++        try:
++            level_actions = int(solver.action_count)
++        except Exception:
++            pass
++        solver._execute_auto_reset()
++        try:
++            solver.write_runtime_state()
++        except Exception:
++            pass
++        snap = self._rb_snapshot
++        import copy as _rb_copy
++        self._history_messages = list(snap["history_messages"])
++        self._last_step_summary = _rb_copy.deepcopy(snap["last_step_summary"])
++        self._last_action_call_result = _rb_copy.deepcopy(snap["last_action_call_result"])
++        self._summarized_knowledge = _rb_copy.deepcopy(snap["summarized_knowledge"])
++        if _persistent_functions():
++            self._kept_functions = dict(snap["kept_functions"])
++        self._pending_wm_rebuild_reason = snap["pending_wm_rebuild_reason"]
++        self._pending_wm_revise_reason = snap["pending_wm_revise_reason"]
++        self._turns_without_wm_update = snap["turns_without_wm_update"]
++        self._auto_diff_prev_frame = None  # no diff image between the abandoned board and the reset board
++        note = _get_env_str_rb(
++            "ARC3_RB_NOTICE",
++            "Note: the harness reset this level to its initial board after a long unsuccessful attempt, "
++            "and your notes and helpers from that attempt were removed. Start this level fresh from the "
++            "board you see now.",
++        )
++        base_notice = snap["retained_clear_notice"] or ""
++        self._retained_clear_notice = (note + (" " + base_notice if base_notice else "")).strip()
++        self._rb_count += 1
++        self._rb_attempt_tokens0 = self._session_generated_tokens
++        # the priority gate's per-level estimate restarts with the new attempt
++        self._tokens_at_level_start = self._session_generated_tokens
++        self._rb_mark = (self._session_runtime_dir, self._tokens_at_level_start)
++        event = {
++            "event": "rollback", "game": str(self._session_runtime_dir), "n": self._rb_count,
++            "spent": spent, "session_tokens": self._session_generated_tokens,
++            "history_msgs": len(self._history_messages), "action_count": level_actions,
++            "remaining_s": remaining, "t": time.time(),
++        }
++        _rb_log_event(event)
++        log.warning("#OURS_RB rollback %s", json.dumps(event, default=str))
++
+     def analyze(
+         self,
+         state_path: Path,
+@@ -6738,6 +6883,11 @@ class ToolAgent:
+             if solver_obj is not None:
+                 solver_obj.action_guard_hook = self._action_guard_hook
+         self._current_valid_actions = _normalize_valid_actions(valid_actions)
++        try:
++            self._rb_maybe_rollback(step_env)
++        except Exception as exc:  # the arm must never break a game
++            self._rb_disabled = True
++            log.warning("#OURS_RB error %r; arm disabled for this game", exc)
+ 
+         analyzer_log = transcript_path or (state_path.parent / f"{state_path.stem}_analyzer.txt")
+         prompt_log = _resolve_prompt_log_path(state_path)

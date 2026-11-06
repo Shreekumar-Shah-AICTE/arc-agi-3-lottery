@@ -1,0 +1,18 @@
+AFT fit on the 10 dev games of B1 (ar25, ft09, lp85, r11l, re86, sb26, sc25, tr87, tu93, vc33): 14 runs, 802 attempts (726 cracked), s 0.48
+  b b1_franzen: -0.056
+  b b1c_ctrl: +0.056
+  b b4_x6: -0.007
+  b b3_x2: +0.155
+  b b8_x7: +0.242
+  b b9_x8: +0.031
+  b b10_x9: +0.291
+  b b12_fb25: +0.069
+  b b28_ctl_fb25: +0.052
+  b b32_ctl_r2: +0.024
+  b b32_ctl_r3: +0.002
+  b b32_spec2_r2: +0.060
+  b b32_spec2_r3: -0.104
+  b t1c_fb25_ctl: -0.009
+B12 mean b vs B1: +0.013 (SD over the 7 B12 runs 0.060); tokens per crack x1.01; B1 A/A: the two B1 runs differ by 0.112
+bootstrap over runs (200 refits): B12 - B1 in b, 90% interval -0.069 to +0.092
+X6 (one run) vs B1: -0.007

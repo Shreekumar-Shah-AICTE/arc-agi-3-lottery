@@ -1,0 +1,2 @@
+games 25; tokens per run: D25 1.42M vs FB25 4.43M (ratio 3.11)
+levels: D25 actual [43, 45] | FB25 cut at the D25 per-game token count [43, 36, 41, 38] | FB25 full [106, 95, 103, 107]

@@ -1,0 +1,70 @@
+diff --git a/ARC3-Inference/inference/agent/tool_agent.py b/ARC3-Inference/inference/agent/tool_agent.py
+index 88457f7..349e17e 100644
+--- a/ARC3-Inference/inference/agent/tool_agent.py
++++ b/ARC3-Inference/inference/agent/tool_agent.py
+@@ -880,6 +880,28 @@ def _is_read_timeout(exc: BaseException) -> bool:
+     return isinstance(exc, requests.exceptions.ReadTimeout)
+ 
+ 
++def _len_cap_notice_enabled() -> bool:
++    """S17 LEN arm: tell the model when its previous reply hit the output limit
++    while still reasoning (finish_reason=length, no content, no tool call).
++
++    Measured on B12-FB25 (25 public games, 121 min each): 35 of 38 length-capped
++    replies made no tool call, and those dead traces held 1.23M reasoning
++    characters, 10.3% of all reasoning in the run, concentrated in the games
++    that were stuck (sp80 6, sk48 4, s5i5 4). The default follow-up is the
++    generic "You have not acted yet" nudge in-turn, or the full opener after a
++    yield, so the model is never told that length, not its analysis, ended the
++    reply. One notice, once, on the next message.
++    """
++    return _get_env_bool("ARC3_LEN_CAP_NOTICE", False)
++
++
++_LEN_CAP_NOTICE = (
++    "Note: your previous reply reached the output limit while you were still reasoning, so it was "
++    "cut off before any tool call and nothing was executed. Keep this reply's reasoning brief: "
++    "settle on one small, informative next step, call the `python` tool early, and continue from its result."
++)
++
++
+ def _stub_dead_reasoning_enabled() -> bool:
+     """Replace reasoning-only assistant replies (no tool calls, no content)
+     with a short stub IN-TURN. Without this the dead trace is re-sent on every
+@@ -6803,6 +6825,9 @@ class ToolAgent:
+                 )
+             self._kept_functions = {}
+         resume_mode = _yield_resume_prompt_mode() if resuming_after_yield else "full"
++        if getattr(self, "_len_cap_notice_pending", False) and resume_mode == "full":
++            self._len_cap_notice_pending = False
++            user_prompt = _LEN_CAP_NOTICE + "\n\n" + user_prompt
+         # state_only always carries the board - that IS the mode - so the
+         # image knob does not apply to it
+         resume_frame = (
+@@ -7134,6 +7159,12 @@ class ToolAgent:
+                                 "stub",
+                             )
+                         self._append_context_message(messages, assistant_message)
++                    if (
++                        _len_cap_notice_enabled()
++                        and not content
++                        and str(result.finish_reason or "").strip() == "length"
++                    ):
++                        self._len_cap_notice_pending = True
+                     yielded_control_reason = control_yield_reason()
+                     if yielded_control_reason is not None:
+                         break
+@@ -7154,6 +7185,13 @@ class ToolAgent:
+                             "was not executed. Emit exactly one `python` tool call whose arguments "
+                             "are a well-formed JSON object. "
+                         )
++                    if (
++                        getattr(self, "_len_cap_notice_pending", False)
++                        and not truncated_tool_call
++                        and not malformed_argument_errors
++                    ):
++                        followup_prefix = _LEN_CAP_NOTICE + " "
++                        self._len_cap_notice_pending = False
+                     if tool_call_markup_in_text:
+                         followup_prefix = (
+                             "You did not call a tool. We detected `<tool_call>` markup inside your reasoning or assistant text, "

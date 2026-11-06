@@ -1,0 +1,27 @@
+8 runs; levels cleared at least once: 142
+  game level  human-h  h/median(earlier h)  rank of h in game  agent actions on the level (runs reaching)
+  dc22 L5     324    3.93   2 of 6   [19, 65, 72, 75, 97, 102]
+  ka59 L6     132    2.59   2 of 7   [76, 93, 104, 159, 177]
+  sp80 L5      96    1.98   3 of 6   [26, 62, 73]
+  s5i5 L4      54    0.61   6 of 8   [61, 62]
+  g50t L5      96    0.54   4 of 7   [72, 131, 244]
+  bp35 L4      38    0.86   7 of 9   [104]
+  cn04 L6     113    1.33   3 of 6   [32, 58]
+  ls20 L6     192    2.29   1 of 7   [19, 149]
+  lf52 L5     205    3.13   3 of 10   [134]
+h relative to the earlier levels of the game: walls median 1.98 (range 0.54 to 3.93); held-out levels cleared at least once (level 2 or later, n=56): median 1.31
+walls whose h is the largest so far in their game: 4 of 9; walls with the largest h of the whole game: 1 of 9
+P(wall ratio > cleared ratio) = 0.56 (AUC; 0.5 = no difference)
+cleared held-out levels (n=346 level clears): median a/h 0.72, median tokens per action 756
+  wall: runs, actions taken (max), tokens on the level (max), tokens per action, actions taken / h (max), tokens to take a/h x h actions at this rate
+  dc22 L5: 6 runs, 102 actions, 216k tokens, 1,950 per action, 0.31 of h, 456k tokens needed
+  ka59 L6: 5 runs, 177 actions, 133k tokens, 659 per action, 1.34 of h, 63k tokens needed
+  sp80 L5: 3 runs, 73 actions, 218k tokens, 2,869 per action, 0.76 of h, 199k tokens needed
+  s5i5 L4: 2 runs, 62 actions, 304k tokens, 3,116 per action, 1.15 of h, 122k tokens needed
+  g50t L5: 3 runs, 244 actions, 191k tokens, 708 per action, 2.54 of h, 49k tokens needed
+  bp35 L4: 1 runs, 104 actions, 242k tokens, 2,329 per action, 2.74 of h, 64k tokens needed
+  cn04 L6: 2 runs, 58 actions, 80k tokens, 1,597 per action, 0.51 of h, 130k tokens needed
+  ls20 L6: 2 runs, 149 actions, 143k tokens, 948 per action, 0.78 of h, 132k tokens needed
+  lf52 L5: 1 runs, 134 actions, 182k tokens, 1,358 per action, 0.65 of h, 201k tokens needed
+walls where no run took even the median cleared share of h (a/h 0.72): 3 of 9
+summary: walls median tokens per action 1,597 against 756 on cleared held-out levels; walls where some run took at least the median cleared share of h and still did not clear: 6 of 9

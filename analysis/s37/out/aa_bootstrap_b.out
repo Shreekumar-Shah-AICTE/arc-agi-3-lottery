@@ -1,0 +1,18 @@
+full fit (120 EM iterations): 1996 attempts, residual s 0.549; b12_fb25 -0.001, b28_ctl_fb25 +0.011, b32_ctl_r2 +0.008, b32_ctl_r3 -0.018, b32_spec2_r2 +0.021, b32_spec2_r3 -0.116  [0.2 s]
+level bootstrap, 400 refits: bootstrap SE of b per run (control mean fixed at 0 in every refit)
+  b12_fb25       b -0.001  SE 0.045
+  b28_ctl_fb25   b +0.011  SE 0.048
+  b32_ctl_r2     b +0.008  SE 0.042
+  b32_ctl_r3     b -0.018  SE 0.041
+  b32_spec2_r2   b +0.021  SE 0.056
+  b32_spec2_r3   b -0.116  SE 0.059
+median SE over the 6 same-agent runs 0.046; over all 17 runs 0.059
+b32_spec2_r3 against its own bootstrap SE: z -1.97  [97 s total]
+variant tests with bootstrap SEs:
+  ht           runs 2  mean b -0.095  bootstrap SE 0.047  z -2.01
+  sdt          runs 2  mean b -0.013  bootstrap SE 0.047  z -0.28
+  len          runs 1  mean b -0.086  bootstrap SE 0.057  z -1.52
+  x7b          runs 1  mean b +0.060  bootstrap SE 0.062  z +0.98
+  b15c         runs 1  mean b +0.053  bootstrap SE 0.068  z +0.77
+  ThinkingCap  runs 1  mean b -0.150  bootstrap SE 0.072  z -2.09
+variants past |z| 2.64 with bootstrap SEs: 0 of 6

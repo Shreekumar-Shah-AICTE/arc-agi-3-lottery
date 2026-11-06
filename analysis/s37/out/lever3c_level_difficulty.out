@@ -1,0 +1,7 @@
+(game, level) cells cleared in >= 2 runs: 114; observations 601
+pooled SD of log tokens 0.93; within-cell (run-to-run) SD 0.49; between-cell SD 0.80
+share of variance that is the level itself (ICC): 0.73
+  level 1: cells 24, within SD 0.41
+  level 2: cells 21, within SD 0.52
+  level 3: cells 19, within SD 0.54
+  level 4: cells 19, within SD 0.46

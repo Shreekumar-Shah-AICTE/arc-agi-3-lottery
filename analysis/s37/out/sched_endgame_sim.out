@@ -1,0 +1,15 @@
+Scheduler simulation: 40 H2 worlds x 10 runs = 400 paired runs per variant; R1 3678 tokens/min per slot, drain every 58k tokens, 1,500 tokens per action
+observed: controls at 121 min 102.75 levels (95-112 over 7 runs, 2.43 zero-level games per run, last start minute 69-108, none unstarted); V5 at 242 min 141 (105 by minute 121)
+  121 on             levels mean  105.7 (run SD 11.0); zero-level games 3.25; last start minute  94.5 (10-90%  79.0-115.5); never started 0.20; levels at minute 121  105.7
+  121 off            levels mean  102.6 (run SD 10.8); zero-level games 2.22; last start minute  87.4 (10-90%  79.0- 95.0); never started 0.00; levels at minute 121  102.6
+  242 on             levels mean  139.6 (run SD 11.5); zero-level games 1.59; last start minute  87.5 (10-90%  79.0- 95.0); never started 0.00; levels at minute 121  102.6
+  242 off            levels mean  135.0 (run SD 15.4); zero-level games 1.58; last start minute  87.5 (10-90%  79.0- 95.0); never started 0.00; levels at minute 121  102.6
+  121 on, continued to 242 levels mean  139.6 (run SD 11.4); zero-level games 1.59; last start minute 100.1 (10-90%  79.0-124.3); never started 0.00; levels at minute 121  105.7
+  121 on + L1 guard  levels mean  104.6 (run SD 11.7); zero-level games 2.21; last start minute 103.3 (10-90%  79.0-118.2); never started 0.63; levels at minute 121  104.6
+  121 on minus 121 off: +3.08 levels (SE 0.21)
+  242 on minus 242 off: +4.61 levels (SE 0.24)
+  242 on minus 121 on: +33.91 levels (SE 0.47)
+  242 off minus 121 off: +32.38 levels (SE 0.53)
+  242 on minus 121 on, continued to 242: +0.01 levels (SE 0.05)
+  121 on + L1 guard minus 121 on: -1.11 levels (SE 0.23)
+  gain from doubling the budget: with the end-of-run rule 33.9, without 32.4 (difference +1.53, SE 0.31)

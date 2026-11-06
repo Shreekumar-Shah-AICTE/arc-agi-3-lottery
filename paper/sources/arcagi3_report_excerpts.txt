@@ -1,0 +1,10 @@
+Excerpts used by paper/build_results.py (two numbers: the 1.15x level-score cap and the 1-in-10,000 random-policy bar).
+Source: ARC Prize Foundation, "ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence", technical report,
+22 April 2026, https://arcprize.org/media/ARC_AGI_3_Technical_Report.pdf (text extracted with pdftotext, 4 Nov 2026).
+Quoted verbatim so the registry rebuilds without the full report; read the report for context.
+
+"Our acceptance threshold was that a random policy should not successfully
+solve a level more often than 1 in 10,000 times."
+
+"To counter this, we
+cap the maximum score for a level at 1.15x the human baseline."

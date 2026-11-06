@@ -1,0 +1,10 @@
+ARC-AGI-3 PRIVATE-BOARD POST-SEAL NOTE (not part of the sealed test). Written 2026-11-06 ~18:50 UTC, after the seal
+(2 Nov 2026; SHA-256 2c5b49a9e139a210ed94b2948d328aabdcf3c3add7ffcc9ee3842511364b0ef7) and before the hosts published the private leaderboard. The sealed file and
+its rule are unchanged; score_sealed.py applies that rule as written.
+
+The sealed rule: H passes if none of P1 to P4 crosses its line and at least three fall in their ranges; H fails if two
+or more cross. Two outcomes are covered by neither clause:
+  (a) exactly one of P1 to P4 crosses its line;
+  (b) none crosses, but fewer than three fall in their ranges.
+Both will be reported as "undecided" (neither a pass nor a fail), with every P value and range printed, so a reader can
+judge them. score_sealed.py already prints both as "H neither passes nor fails (mixed)". No other reading of the rule will be used. Prompted by outside review round 2 (6 Nov 2026, D102/D103).

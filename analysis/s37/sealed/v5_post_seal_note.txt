@@ -1,0 +1,22 @@
+V5 POST-SEAL NOTE (not part of the sealed test). Written 2026-11-04 ~10:47 UTC (pushed in f2a04ca at ~10:48 UTC): after the seal (10:16 UTC, SHA-256
+a2161efb0be8026f6f03766540347717ebb04729df57de870662b2c5e3d04816) and before any V5 output exists (the run ends ~14:45 UTC).
+The sealed decision rule (110-145 pass) is unchanged and is the only test. This note records second opinions computed
+in between, so that they are timestamped before the result.
+
+1. Crack waits are mostly a property of the level (lever3c_level_difficulty.py): across six same-agent runs, 73% of the
+   variance of log tokens-to-clear is between (game, level) cells; the run-to-run spread for the same level is s = 0.49
+   (pooled cure-lognormal s = 1.05).
+2. Only a model with persistent level difficulty AND persistent walls reproduces the run-to-run noise
+   (lever3d_noise_model.py, full-run simulator, 10 streams shared fairly): run-total SD within a world 5.6 (H2) vs observed
+   5.3; homogeneous H0 12.3 and random-wall H1 11.1 predict about twice the observed noise. The pooled model used for the
+   sealed prediction (H0-type) gets the mean right but not the variance; its sealed interval is therefore likely too wide,
+   not mis-centred.
+3. Full-run simulator predictions for twice the play time (lever3e_v5_alt_models.py; tokens scale with time; finished
+   games free their stream share dynamically): H0 139.4, H1 138.0, H2 135.4 levels (2x/1x ratios 1.32-1.36). The sealed
+   centre (127) held the second-half stream share at the FB25 ratio (1.34-1.37), flagged in the sealed file as pushing
+   toward the out-of-time side; the simulator lets that share grow as games finish. Reading rule written now: a V5 total
+   near 127 favours the fixed-ratio continuation; a total of 133-142 favours the dynamic simulator; both are inside the
+   sealed pass band. Neither separates H0 from H2: their 2x totals differ by 4 levels.
+4. Lever 5 candidate (lever5_scheduler_sim.py): scheduling streams by the posterior crack hazard gains nothing over fair
+   sharing (+0.0% homogeneous, -3.6% with game heterogeneity); an oracle that knows which levels are walls gains +13 to
+   +17%. A scheduling method therefore needs a wall signal other than elapsed tokens.

@@ -1,0 +1,11 @@
+top group 27 teams; n median 81.0
+sigma 2.87: top-group spearman 0.888 [0.820, 0.943], mean drop 5.09
+sigma 2.3: top-group spearman 0.915 [0.859, 0.957], mean drop 4.06
+sigma 3.3: top-group spearman 0.866 [0.785, 0.929], mean drop 5.82
+sigma 1.0: top-group spearman 0.966 [0.943, 0.985], mean drop 1.77
+our public percentile in C 0.925 C top-decile size 226
+sigma 2.87: D-hat mean -0.74 sd 0.27; 56832595 private - D-hat: 28.23 [23.06, 33.49], P(>=33.5)=0.050
+sigma 2.3: D-hat mean -0.17 sd 0.23; 56832595 private - D-hat: 27.71 [22.62, 33.24], P(>=33.5)=0.042
+sigma 3.3: D-hat mean -1.30 sd 0.31; 56832595 private - D-hat: 28.77 [23.68, 33.80], P(>=33.5)=0.066
+8-run private SD 90%: [1.67 2.83 4.23]
+extras exit 0

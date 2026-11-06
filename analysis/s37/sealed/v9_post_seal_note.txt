@@ -1,0 +1,10 @@
+V9 POST-SEAL NOTE (not part of the sealed test). Written 2026-11-05 ~15:05 UTC, before the private ARC-AGI-2 board was
+published. The sealed file (SHA-256 1fffeeef7e1bed48f4cccb4dc39a4a5cac1f7a62d52121df26c6ad853f320945) and its
+predictions are unchanged. This note corrects one label in its DATA section.
+
+The file calls our three A0 draws (29.72, 29.31, 28.06) "3 forks". They were three runs of the same notebook version
+(kernel arc2-a0-lb3389-fork v1: submission 56712373 on 30 Sep, resubmitted unchanged as 56833698 and 56858952; see
+state/EXPERIMENTS.csv rows A0, A0-R2 and A0-R3 and commit 9148084). So both groups are unchanged resubmissions of one
+notebook each: A0 three times (SD 0.86) and PP four times (SD 0.34). The sealed numbers are not affected: the primary
+noise SD 0.6 is the pooled within-notebook SD of these two groups, as the file says. The paper's Section 4.8 had
+used the same wrong label to call PP's SD alone (0.34) the run-luck floor; it now uses the pooled SD (0.61).

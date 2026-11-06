@@ -1,0 +1,66 @@
+1022 (run, game) rows from 39 runs
+b10_x9           games 10  mean score  12.76  levels  23  cracked 10
+b12_fb25         games 25  mean score  48.32  levels 106  cracked 24
+b12_ht           games 25  mean score  52.20  levels 108  cracked 22
+b12_ht2          games 25  mean score  49.80  levels 110  cracked 22
+b12_len          games 25  mean score  50.66  levels 110  cracked 25
+b12_sdt          games 25  mean score  44.77  levels 101  cracked 23
+b12_sdt_r2       games 25  mean score  48.35  levels 106  cracked 23
+b12_x7b          games 25  mean score  47.44  levels 100  cracked 21
+b12d25           games 25  mean score  14.55  levels  43  cracked 16
+b12d25_r2        games 25  mean score  18.41  levels  45  cracked 15
+b13_x6d16        games 25  mean score  14.30  levels  46  cracked 17
+b15_vllm         games 25  mean score  23.58  levels  59  cracked 18
+b15_vllm_r2      games 25  mean score  16.87  levels  48  cracked 17
+b15c_fb25        games 25  mean score  42.85  levels 103  cracked 25
+b1_franzen       games 10  mean score  44.44  levels  44  cracked 10
+b1c_ctrl         games 10  mean score  41.66  levels  43  cracked 10
+b23_d27          games 25  mean score  10.17  levels  46  cracked 22
+b23_tc27         games 25  mean score  10.08  levels  48  cracked 24
+b24_g4           games 25  mean score   0.23  levels   5  cracked  4
+b28_ctl_fb25     games 25  mean score  42.59  levels  95  cracked 21
+b28_tc_fb25      games 25  mean score  30.34  levels  86  cracked 23
+b29_occ_fb25     games 25  mean score  48.65  levels 103  cracked 21
+b2t_spec4        games 10  mean score   0.00  levels   0  cracked  0
+b30_safe         games  1  mean score  47.62  levels   4  cracked  1
+b31_spec1_fb25   games 25  mean score  45.86  levels 100  cracked 22
+b31_spec2_fb25   games 25  mean score  54.57  levels 115  cracked 24
+b32_ctl_r2       games 25  mean score  47.75  levels 103  cracked 23
+b32_ctl_r3       games 25  mean score  50.38  levels 107  cracked 22
+b32_spec2_r2     games 25  mean score  42.77  levels  97  cracked 23
+b32_spec2_r3     games 25  mean score  49.17  levels 107  cracked 22
+b3_x2            games 10  mean score  40.11  levels  41  cracked  9
+b4_x6            games 10  mean score  46.91  levels  45  cracked 10
+b5_x2ho          games 15  mean score   7.06  levels  20  cracked 11
+b5c_ctrlho       games 15  mean score   7.33  levels  22  cracked 14
+b7_x6ho          games 15  mean score  13.26  levels  28  cracked 14
+b7c_ctrlho2      games 15  mean score  10.22  levels  24  cracked 13
+b8_x7            games 10  mean score  25.72  levels  32  cracked 10
+b9_x8            games 10  mean score  44.81  levels  46  cracked 10
+f1_forklab       games 256  mean score  18.03  levels 593  cracked 236
+game  runs  P(crack)  mean levels|crack  median tokens to first clear
+lp85    49      0.98               6.23        7389
+cn04    37      0.97               2.22       13752
+r11l    49      0.96               3.83       14559
+sp80    45      0.96               1.86        5576
+ft09    42      0.95               4.85        7142
+tu93    41      0.95               5.46        8445
+vc33    41      0.95               4.44        8590
+ka59    29      0.93               3.41       26156
+wa30    29      0.93               1.19       27954
+tr87    41      0.93               4.45       19563
+tn36    37      0.92               2.15       14350
+m0r0    45      0.91               3.66       20269
+ls20    45      0.91               2.29       15861
+s5i5    45      0.87               1.90       10234
+bp35    37      0.86               1.06       40607
+lf52    37      0.86               1.31       12464
+sc25    49      0.86               3.24       26035
+ar25    41      0.85               6.00        5401
+sb26    41      0.83               6.94        2271
+re86    41      0.83               4.71        5868
+su15    37      0.81               2.47        8020
+dc22    45      0.76               2.35       29672
+cd82    45      0.71               4.25       37304
+g50t    45      0.49               1.82       56757
+sk48    29      0.38               1.00       35270

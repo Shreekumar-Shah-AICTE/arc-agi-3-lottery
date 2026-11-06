@@ -1,0 +1,33 @@
+run: v5_fb50.benchmark.json.gz; games 25; states {'gave_up': 14, 'won': 11}; games with tokens 25; total tokens 8.49M; max game wall clock 243.1 min
+VALID (25 games, all played): True (also check the kernel log for server crashes)
+P-V5-1 total levels 141 (sealed 127, 90% 110-145): PASS
+P-V5-2 games completed 11 (sealed 13, 90% 10-16): inside
+P-V5-3 levels by minute 121 105 (sealed about 103, 93-113): inside
+P-V5-4 Spearman(predicted gain, actual gain) over 19 open games: 0.48 (sealed median 0.22, 90% -0.23 to 0.54)
+alternatives: A saturation ~103, B log-linear ~140, C linear 150-175; log-logistic variant 130.5
+per game: id nl FB25-mean predicted-2x V5 (levels by 121 min)
+  ar25  8  8.00   8.0  8 (6)
+  bp35  9  0.50   2.0  3 (2)
+  cd82  6  6.00   6.0  6 (6)
+  cn04  6  2.75   3.8  5 (4)
+  dc22  6  2.00   3.1  4 (4)
+  ft09  6  5.50   5.6  6 (4)
+  g50t  7  2.00   3.7  4 (4)
+  ka59  7  4.00   5.9  5 (4)
+  lf52 10  1.00   2.7  4 (3)
+  lp85  8  8.00   8.0  8 (8)
+  ls20  7  3.25   5.0  5 (4)
+  m0r0  6  5.00   5.7  6 (4)
+  r11l  6  6.00   6.0  6 (4)
+  re86  8  5.50   7.0  6 (5)
+  s5i5  8  1.50   2.9  3 (3)
+  sb26  8  8.00   8.0  8 (8)
+  sc25  6  3.50   4.5  6 (4)
+  sk48  8  0.25   1.9  4 (0)
+  sp80  6  1.25   2.0  4 (1)
+  su15  9  4.00   6.0  8 (5)
+  tn36  7  3.50   5.1  6 (1)
+  tr87  6  6.00   6.0  6 (5)
+  tu93  9  8.00   8.7  9 (7)
+  vc33  7  6.00   6.3  7 (5)
+  wa30  9  1.25   3.3  4 (4)

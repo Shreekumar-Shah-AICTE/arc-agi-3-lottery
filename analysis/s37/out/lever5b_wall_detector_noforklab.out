@@ -1,0 +1,50 @@
+# lever5b_wall_detector.py rerun with the f1_forklab run excluded (check only; 4 Nov 2026 ~19:10 UTC). Made with: sed 's/^for p in dev_run_files():/for p in [f for f in dev_run_files() if not f.name.startswith("f1_forklab")]:/' lever5b_wall_detector.py > _tmp_wd.py; python3 _tmp_wd.py. Compare out/lever5b_wall_detector.out (with forklab).
+level-attempt checkpoints: 5568 rows, 37 runs, 25 games; H = 30000
+
+C = 5k tokens into the attempt: n 1557, wall-like share 0.37
+  leave-one-game-out logistic AUC 0.589
+  univariate AUC (0.5 = no signal; <0.5 = higher value means crack soon):
+    log_prev_mean          0.587
+    log_calls              0.435
+    has_prev               0.562
+    frac_tokens_last_call  0.562
+    frac_click             0.446
+    click_novelty          0.459
+    level_index            0.541
+    log_max_call           0.532
+
+C = 10k tokens into the attempt: n 1815, wall-like share 0.42
+  leave-one-game-out logistic AUC 0.573
+  univariate AUC (0.5 = no signal; <0.5 = higher value means crack soon):
+    log_prev_mean          0.607
+    log_calls              0.457
+    has_prev               0.535
+    frac_click             0.465
+    action_entropy         0.532
+    n_distinct_actions     0.531
+    frac_tokens_last_call  0.527
+    rep3                   0.474
+
+C = 20k tokens into the attempt: n 1438, wall-like share 0.50
+  leave-one-game-out logistic AUC 0.550
+  univariate AUC (0.5 = no signal; <0.5 = higher value means crack soon):
+    log_prev_mean          0.575
+    log_actions            0.440
+    log_calls              0.453
+    frac_tokens_last_call  0.540
+    n_distinct_actions     0.464
+    rep3                   0.468
+    action_entropy         0.472
+    actions_per_call       0.472
+
+C = 40k tokens into the attempt: n 758, wall-like share 0.58
+  leave-one-game-out logistic AUC 0.582
+  univariate AUC (0.5 = no signal; <0.5 = higher value means crack soon):
+    log_actions            0.406
+    log_max_call           0.439
+    log_calls              0.443
+    log_prev_mean          0.555
+    frac_tokens_last_call  0.549
+    actions_per_call       0.451
+    has_prev               0.534
+    n_distinct_actions     0.468

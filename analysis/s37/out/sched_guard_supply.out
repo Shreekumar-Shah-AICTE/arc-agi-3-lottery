@@ -1,0 +1,5 @@
+Never-started and zero-level games per run, 40 worlds x 10 runs, 121 minutes, end-of-run rule on
+  supply x1.00, no guard: never started 0.20 per run (2 or more in 3% of runs); zero-level games among started 3.25; levels 105.7
+  supply x1.00, guard   : never started 0.63 per run (2 or more in 9% of runs); zero-level games among started 2.21; levels 104.6
+  supply x0.86, no guard: never started 0.98 per run (2 or more in 18% of runs); zero-level games among started 3.92; levels 92.9
+  supply x0.86, guard   : never started 2.25 per run (2 or more in 59% of runs); zero-level games among started 2.52; levels 90.5

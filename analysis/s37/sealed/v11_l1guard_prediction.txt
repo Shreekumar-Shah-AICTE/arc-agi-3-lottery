@@ -1,0 +1,53 @@
+V11 SEALED PREDICTION: first-level guard (written 5 Nov 2026 about 14:35 UTC, before V11 was launched)
+Kaggle team "Shreekumar Shah" (user shreekumarshah), ARC Prize 2026 Paper Track.
+
+Question
+In the seven valid runs of this agent at 121 minutes, 17 game runs ended with 0 levels. In 14 of them the slot rule D'
+shelved the game after 56k to 132k tokens on level 1 (median 77k): at a context trim the game handed its slot back,
+lost it to a game with a higher D' value, and never played again. All six of those games cleared level 1 in V5
+(242 minutes), after 40k to 350k tokens. Hypothesis: most of these zeros come from shelving, not from walls on level 1.
+Test: protect games on level 1 from shelving, and count the games that end with 0 levels.
+
+Run
+- V11: kaggle/v11_l1guard (Kaggle kernel shreekumarshah/arc3-v11-l1guard). The FB25 control notebook, identical to
+  kaggle/t1c_fb25_ctl/b12_fb25.ipynb except for two additions: cell 21 wraps the slot priority after D' is installed,
+  and cell 23 prints the guard's hit count. 25 public games, 121 minutes per game, the same harness, model, GPU and
+  clock as the controls.
+- The guard: whenever a game's slot priority is computed (at a context trim, or while it waits in the queue), a game
+  that is on level 1, has cleared no level, and has spent more than 0 and fewer than 150,000 generated tokens on the
+  level gets priority 500,000,000. That is above every D' value (all below 100,000), so the game wins its slot back.
+  Every other priority is D' unchanged, including games that have not started (0 tokens). A protected game loses the
+  protection at 150,000 tokens.
+
+Reference: the seven valid same-agent runs at 121 minutes (b12_fb25, b28_ctl_fb25, b32_ctl_r2, b32_ctl_r3,
+b32_spec2_r2, b32_spec2_r3, t1c_fb25_ctl)
+- Game runs with 0 levels per run: 1, 4, 2, 3, 2, 3, 2 (mean 2.43, 17 in total). sk48 is one of them in 6 of 7 runs.
+- Total levels per run: 106, 95, 103, 107, 97, 107, 112 (mean 103.9, SD 6.0).
+- Minute the last game starts: 69 to 108 (always lf52). Games that never started: 0.
+
+P-V11-1 (primary, the only scored prediction)
+N0 = the number of the 25 games that started (non-empty history in benchmark.json) and ended with
+levels_completed == 0.
+  PASS if N0 <= 1.  FAIL if N0 >= 2.
+Only 1 of the 7 reference runs has N0 <= 1, so with no effect the chance of a PASS is about 1 in 7 (about 3 in 10
+under a Poisson count with the reference mean). Expected under the guard, not scored: about 1.5, with sk48 the most
+likely zero (its level 1 took 350k tokens in V5). So even if the mechanism is right, a PASS is close to a coin flip.
+One run is a weak test, and a FAIL alone does not refute the mechanism. Reported as PASS or FAIL whatever the result.
+
+Validity
+- The kernel log contains "#OURS_FORM ok version=d_prime" followed by "#V11_L1GUARD ok", and the run writes
+  benchmark.json with 25 games. If the kernel fails before writing benchmark.json, it is rerun once with the same
+  notebook and scored by the same rule.
+- If any game never starts, the run is reported as partial: P-V11-1 is scored among the started games, and the number
+  of games that never started is reported, together with N0 counting them as zeros. No rerun in that case.
+
+Secondary (reported, not scored)
+- Total levels on the 25 games. One run cannot resolve a change against an SD of 6.0.
+- The minute the last game starts (reference 69 to 108), and the number of games that never start.
+- Levels of sk48, bp35, dc22, g50t, sc25 and cd82 (the six games with zeros in the reference runs).
+- For each game that ends with 0 levels: tokens on level 1, and whether it was shelved (last logged step more than
+  30 minutes before the end of the budget, as in analysis/s37/walls.py).
+- The guard's hit count (the "#V11_L1GUARD hits=" line printed after the run).
+
+Readout: kaggle kernels output shreekumarshah/arc3-v11-l1guard; N0 from benchmark.json (games with a non-empty history
+and levels_completed == 0); start and last-step minutes from the first and last logged steps, as in walls.py.

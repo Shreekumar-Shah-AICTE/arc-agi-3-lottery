@@ -1,0 +1,4 @@
+13 runs x 25 games: mean 47.47, observed SD 3.23, predicted SD 3.79, share 138%
+bootstrap 90% interval for the share: 88% to 260%
+mean pairwise correlation of per-game scores across runs: -0.007 (253 game pairs that vary)
+games whose level count varies: 22 of 25 ; max swing 7 levels

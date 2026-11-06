@@ -1,0 +1,8 @@
+OpenTimestamps proof upgrade for arc3_private_lb_prediction.txt
+Upgraded: 2026-11-04 09:40 UTC (ots upgrade, opentimestamps-client), all 4 calendars answered.
+File SHA-256: 2c5b49a9e139a210ed94b2948d328aabdcf3c3add7ffcc9ee3842511364b0ef7
+Bitcoin attestations in the proof (ots info), checked against block headers from blockstream.info:
+  block 974295, merkle root 9d29cf6dd5621bfca6a13db1a4e6ef6f77c29c0b2e30d4b0f599a0b7874e802e, block time 2026-11-02T20:33:50Z (match)
+  block 974322, merkle root c9f550175c9d7f6b2ff18af5ad9bf0c336b65f417304a1d8af8d9f9385352ed9, block time 2026-11-03T00:25:32Z (match)
+Earliest attestation (block 974295, 20:33:50 UTC) is before the ARC-AGI-3 close (2026-11-02 23:59 UTC).
+Full check without trusting us: `ots verify arc3_private_lb_prediction.txt.ots` with a Bitcoin node.

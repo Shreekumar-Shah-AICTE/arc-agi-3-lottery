@@ -1,0 +1,12 @@
+--- heterogeneity SD 0.0 (log-median per game)
+  fair  : levels   98.7 (SD 13.4), games completed  4.6
+  hazard: levels   98.7 (SD 12.8), games completed  7.0
+  oracle: levels  115.4 (SD  9.5), games completed  9.4
+  hazard vs fair: +0.0%
+  oracle vs fair: +16.9%
+--- heterogeneity SD 0.8 (log-median per game)
+  fair  : levels   98.3 (SD 13.0), games completed  6.8
+  hazard: levels   94.7 (SD 14.6), games completed  7.4
+  oracle: levels  111.4 (SD 12.8), games completed  9.5
+  hazard vs fair: -3.6%
+  oracle vs fair: +13.4%

@@ -1,0 +1,5 @@
+T1 t1_fb25_nospec.benchmark.json.gz: games 25, tokens 3.296M, levels 86, completed 5, VALID False (also check the kernel log for server crashes)
+measured supply ratio r = 0.723
+P-V10-1 UNTESTED (invalid run or r outside 0.40-1.00)
+T1c t1c_fb25_ctl.benchmark.json.gz: games 25, tokens 4.545M (0.997 of control mean), levels 112, completed 8, VALID True
+P-V10-2 drift check (levels 92.7-112.8, tokens within 5%): no drift

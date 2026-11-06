@@ -1,0 +1,11 @@
+label duck-harness-kaggle n_passes 4 game_runs 100 2026-10-03T14:09:04.728682 2026-10-03T22:20:01.551033
+passes 4, games in all passes 25, longest game wall 483.6 min
+  pass 0: levels 102, tokens 4.06M, mean score 45.80
+  pass 1: levels 106, tokens 4.67M, mean score 45.59
+  pass 2: levels 104, tokens 4.14M, mean score 47.46
+  pass 3: levels 105, tokens 4.63M, mean score 47.12
+f 0.25 (120.9 min): pass totals [53, 49, 50, 0], var(total)  644.7 vs sum per-game var   48.5; null median   40.0, P(null <= obs) = 1.000
+f 0.50 (241.8 min): pass totals [67, 77, 72, 71], var(total)   16.9 vs sum per-game var   54.9; null median   44.2, P(null <= obs) = 0.180
+f 0.75 (362.7 min): pass totals [85, 94, 86, 87], var(total)   16.7 vs sum per-game var   57.2; null median   46.7, P(null <= obs) = 0.162
+f 1.00 (483.6 min): pass totals [102, 106, 104, 105], var(total)    2.9 vs sum per-game var   49.8; null median   40.9, P(null <= obs) = 0.020
+final scores: pass means [45.8, 45.59, 47.46, 47.12], SD 0.93 vs independent-games prediction 4.54

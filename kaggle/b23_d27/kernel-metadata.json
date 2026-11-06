@@ -1,0 +1,26 @@
+{
+ "id": "shreekumarshah/arc3-b23-d27-fb25",
+ "title": "arc3-b23-d27-fb25",
+ "code_file": "b23_d27.ipynb",
+ "language": "python",
+ "kernel_type": "notebook",
+ "is_private": true,
+ "enable_gpu": true,
+ "enable_tpu": false,
+ "enable_internet": false,
+ "keywords": [
+  "gpu"
+ ],
+ "dataset_sources": [
+  "dfranzen/pennyroyal-v253",
+  "dfranzen/taaf-kaggle-source-bundle-copy",
+  "driessmit1/qwen3-8-27b-fp8-hf-017b9c7a"
+ ],
+ "kernel_sources": [],
+ "competition_sources": [
+  "arc-prize-2026-arc-agi-3"
+ ],
+ "model_sources": [],
+ "docker_image": "gcr.io/kaggle-private-byod/python@sha256:57e612b484cf3df5026ee4dcc3cb176974b22b2bc0937fb1e16132a8be4cb13c",
+ "machine_shape": "NvidiaRtxPro6000"
+}

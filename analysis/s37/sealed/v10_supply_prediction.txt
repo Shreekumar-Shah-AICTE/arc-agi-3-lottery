@@ -1,0 +1,58 @@
+V10 SEALED PREDICTION: token supply test T1 (written 4 Nov 2026 about 16:45 UTC, before T1 and T1c were launched)
+Kaggle team "Shreekumar Shah" (user shreekumarshah), ARC Prize 2026 Paper Track.
+
+Runs
+- T1: kaggle/b12_fb25_nospec (Kaggle kernel shreekumarshah/arc3-t1-fb25-nospec). The FB25 control notebook with
+  speculative decoding off (CFG SPEC=False); the only other change is the markdown header in cell 0. 25 public games,
+  121 minutes per game, the same harness, model and clock as the controls.
+- T1c: kaggle/t1c_fb25_ctl (kernel shreekumarshah/arc3-t1c-fb25-ctl). The FB25 control notebook, byte-identical to
+  kaggle/b12_fb25/b12_fb25.ipynb, launched the same day as T1.
+
+Measured supply
+- r = T1 total generated tokens / 4.5585M, the mean of the four FB25 control runs (b12_fb25 4.601M, b28_ctl_fb25 4.582M,
+  b32_ctl_r2 4.562M, b32_ctl_r3 4.489M). Tokens are the per-game "tokens=" values in benchmark.json (solver_note).
+
+Model (token-time equivalence, as in lever4b): the same agent with supply ratio r behaves like a control run stopped at
+minute r x 121, so its total levels are L(r), the mean clock curve of the four controls. 90% band: the run-to-run SD at
+m = r (observed over the four controls, floored at 5.3 x sqrt(L(m) / L(1))) combined with the curve's own SE (SD / 2).
+
+P-V10-1 (primary): total levels of T1 on the 25 games, given the measured r (linear interpolation between rows):
+  r     levels  90% band
+  0.40    48.2    41.6 to  54.9
+  0.45    57.8    50.4 to  65.1
+  0.50    65.0    57.2 to  72.8
+  0.55    69.2    61.2 to  77.3
+  0.60    77.2    68.8 to  85.7
+  0.65    81.5    72.3 to  90.7
+  0.70    85.5    76.2 to  94.8
+  0.75    88.2    79.2 to  97.3
+  0.80    91.8    81.7 to 101.8
+  0.85    95.2    83.9 to 106.6
+  0.90    97.2    86.9 to 107.6
+  0.95   101.0    91.3 to 110.7
+  1.00   102.8    92.7 to 112.8
+PASS if T1's total is inside the band at the measured r. ABOVE the band: the agent is not token-limited at this supply.
+BELOW the band: slower serving costs more than its tokens. UNTESTED if r is outside 0.40 to 1.00 or the run is invalid.
+Prior on r (INFERENCE, no spec-off run on this stack yet): 0.55 to 0.90, so the unconditional range is 61 to 108 levels.
+
+P-V10-2 (drift check): T1c totals 92.7 to 112.8 levels and its tokens are within 5% of 4.5585M (4.33M to 4.79M). If T1c
+fails either range, P-V10-1 is also reported against T1c: r' = T1 tokens / T1c tokens and L'(r') = L(r') x T1c levels /
+102.8 with the band scaled the same way, and the verdict is flagged "drift". The primary verdict stays P-V10-1 as above.
+
+Assumptions stated in advance
+1. Speculative decoding runs with both acceptance thresholds at 1.0 (SGLang defaults, standard lossless acceptance), so
+   switching it off changes the speed of generation, not what the model generates (INFERENCE).
+2. The harness's endgame (the D' slot priority fades its levels-left bonus over the last 40% of each game's budget)
+   starts at minute 72.6 in T1 and in the controls, so in token terms T1 enters it earlier. We assume the endgame
+   reshuffles levels between games without changing the total at a given token count much. Evidence: at minute 121
+   the doubled run V5 (no endgame yet) had 105 levels, against 95 to 107 in the four controls (endgame since 72.6).
+
+Validity: all 25 games played, each with tokens > 0, and no server crash in the kernel log. An invalid T1 or T1c is
+rerun once with the same notebook; the rerun is scored by the same rule.
+Readout: analysis/s37/v10_readout.py, committed together with this file.
+
+Files (SHA-256, repo paths)
+  kaggle/b12_fb25_nospec/b12_fb25_nospec.ipynb  24668139fa415739e7173908cf07fd3c5b4ca203479d9fa03d9baf35281148e3
+  kaggle/t1c_fb25_ctl/b12_fb25.ipynb            1962ece04424f21f052ec5a4b9ea737f69e5d5eef85f300aa0e433cc0257f89a
+  analysis/s37/v10_supply_prediction.py         4d92362cdce66b6a36498ca95fbff78c7328ed84f5cbad927cc0c2a80b473859
+  analysis/s37/v10_readout.py                   f8184478e82096de31edc4aa6481e79059235866fd66ba19bac54a00d14f1e9c

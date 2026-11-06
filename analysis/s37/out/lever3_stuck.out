@@ -1,0 +1,9 @@
+fit q 0.06 median 22.1k s 1.05
+open attempts at 121 min: 69 (per run 17.2); expected walls 29.0 (42%), slow cracks 40.0
+  open with 0-30k tokens on the level: n  6, mean P(wall) 0.10
+  open with 30-60k tokens on the level: n  7, mean P(wall) 0.22
+  open with 60-100k tokens on the level: n 31, mean P(wall) 0.35
+  open with 100-150k tokens on the level: n 16, mean P(wall) 0.58
+  open with 150-999k tokens on the level: n  9, mean P(wall) 0.74
+  level 1: open 10, expected walls 3.8
+  later levels: open 59, expected walls 25.3

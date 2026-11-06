@@ -1,0 +1,5 @@
+V5 sealed prediction OpenTimestamps upgrade (4 Nov 2026 ~14:40 UTC)
+file analysis/s37/sealed/v5_budget_prediction.txt sha256 a2161efb0be8026f6f03766540347717ebb04729df57de870662b2c5e3d04816
+ots upgrade: Success, timestamp complete; BitcoinBlockHeaderAttestation block 974519
+block 974519 hash 00000000000000000000c2db2e589f0432e5ab3971d5949af6c12694c715e482 time 2026-11-04T10:52:51Z merkle root 2d2326fbc41ab6f4... (matches the proof; blockstream.info API)
+V5 kernel finished 2026-11-04 ~14:33 UTC, so the seal predates the outcome by about 3.7 hours.

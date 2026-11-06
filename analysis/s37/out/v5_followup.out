@@ -1,0 +1,4 @@
+all 25 games: 1x mean 102.75, sealed model 2x 127.2, V5 141; gain observed 38.25 vs predicted 24.45
+6 games stuck early at 1x (FB25 mean <= 1.5: bp35, lf52, s5i5, sk48, sp80, wa30): 1x 5.75, predicted 14.8, V5 22; excess over prediction 7.2
+other 19 games: 1x 97.00, predicted 112.4, V5 119; excess over prediction 6.6
+games completed: V5 11; solved in every 1x control 6

@@ -1,0 +1,94 @@
+{
+ "X6v2": {
+  "prefill_batches": 590,
+  "prefill_new_tok": 1978176,
+  "prefill_cached_tok": 30634432,
+  "decode_lines": 1015,
+  "decode_tps_mean": 655.9,
+  "running_mean": 8.43,
+  "queue_mean": 0.02,
+  "analyzer_timeouts_unique": 6,
+  "summary_failed_unique": 0,
+  "requests": 519,
+  "responses": 513,
+  "summary_requests_logged": 0,
+  "summary_responses_logged": 0,
+  "prompt_tok": 32054187,
+  "cached_tok_reported": 30168256,
+  "completion_tok": 898459,
+  "finish": {
+   "tool_calls": 511,
+   "length": 2
+  },
+  "per_game_req": {
+   "ar25": 51,
+   "ft09": 46,
+   "lp85": 58,
+   "r11l": 70,
+   "re86": 55,
+   "sb26": 46,
+   "sc25": 51,
+   "tr87": 48,
+   "tu93": 41,
+   "vc33": 53
+  },
+  "per_game_summ": {
+   "ar25": 0,
+   "ft09": 0,
+   "lp85": 0,
+   "r11l": 0,
+   "re86": 0,
+   "sb26": 0,
+   "sc25": 0,
+   "tr87": 0,
+   "tu93": 0,
+   "vc33": 0
+  }
+ },
+ "X7": {
+  "prefill_batches": 1142,
+  "prefill_new_tok": 6962304,
+  "prefill_cached_tok": 15646080,
+  "decode_lines": 704,
+  "decode_tps_mean": 626.4,
+  "running_mean": 9.17,
+  "queue_mean": 0.28,
+  "analyzer_timeouts_unique": 4,
+  "summary_failed_unique": 2,
+  "requests": 370,
+  "responses": 365,
+  "summary_requests_logged": 0,
+  "summary_responses_logged": 0,
+  "prompt_tok": 18988405,
+  "cached_tok_reported": 15285696,
+  "completion_tok": 566647,
+  "finish": {
+   "tool_calls": 364,
+   "length": 1
+  },
+  "per_game_req": {
+   "ar25": 40,
+   "ft09": 36,
+   "lp85": 44,
+   "r11l": 21,
+   "re86": 33,
+   "sb26": 44,
+   "sc25": 45,
+   "tr87": 48,
+   "tu93": 28,
+   "vc33": 31
+  },
+  "per_game_summ": {
+   "ar25": 0,
+   "ft09": 0,
+   "lp85": 0,
+   "r11l": 0,
+   "re86": 0,
+   "sb26": 0,
+   "sc25": 0,
+   "tr87": 0,
+   "tu93": 0,
+   "vc33": 0
+  }
+ }
+}

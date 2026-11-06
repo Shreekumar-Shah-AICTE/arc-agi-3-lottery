@@ -1,0 +1,11 @@
+157 ledger rows; negative 32: {'KILLED': 6, 'NOISE': 4, 'FAIL': 8, 'KILL': 9, 'PARK': 3, 'INVALID': 2}
+ledger total 162 rows; the paper's own test runs (ARC-AGI-3 dev (paper), Section 4.4), not counted above: V5-FB50 PASS, T1-FB25-NOSPEC INVALID, T1C-FB25-CTL COMPLETE, T1R-FB25-NOSPEC INVALID, V11-L1GUARD PASS
+negative by track: {'ARC-AGI-2 eval 120': 1, 'ARC-AGI-3': 6, 'ARC-AGI-2': 3, 'ARC-AGI-2 eval 120+60': 1, 'ARC-AGI-2 eval 60': 1, 'ARC-AGI-3 CPU': 1, 'ARC-AGI-3 serving': 2, 'ARC-AGI-3 harness': 7, 'ARC-AGI-3 engine': 6, 'ARC-AGI-3 stall': 1, 'ARC-AGI-3 memory': 1, 'ARC-AGI-3 model': 1, 'ARC-AGI-3 occupancy': 1}
+positive-looking rows: 7
+   E0 2026-09-30 ARC2 | scorer sanity | pass
+   B4-X6-res 2026-10-01 ARC-AGI-3 | X6 solved-level ledger | PASS-COMMIT-GATE (weak)
+   B7-X6-HO-res 2026-10-02 ARC-AGI-3 | X6 on 15 holdout games | PASS-WEAK
+   B4-X6-rep 2026-10-02 ARC-AGI-3 | X6 identical replicate on dev 10 | CONSISTENT-WEAK
+   E1c-kv 2026-10-03 ARC-AGI-2 | E1c serving diagnosis from vLLM logs | FINDING
+   ARCP-cal 2026-10-03 ARC-AGI-2 | calibrate E1c vs arcprize verified per-task Qwen3.8-27B xhigh | FINDING
+   E1c-a1 2026-10-03 ARC-AGI-2 | where do second attempts pay | FINDING

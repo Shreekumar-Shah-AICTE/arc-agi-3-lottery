@@ -1,0 +1,63 @@
+ARC Prize 2026 / ARC-AGI-3: sealed prediction of the private leaderboard
+Kaggle team "Shreekumar Shah" (user shreekumarshah). Written on 2026-11-02 after 20:00 UTC,
+before Kaggle published the private leaderboard. Only the SHA-256 of this file is made public now.
+
+DATA
+- Public ARC-AGI-3 leaderboard, downloaded 2026-11-02 19:58:10 UTC with the Kaggle CLI: 5,065 teams.
+  arc-prize-2026-arc-agi-3-publicleaderboard-2026-11-02T19:58:10.csv
+  SHA-256 b13adea7ddb9f4f7bb25c6129c9f94a0b93c91f838c2f489773ffb6c5ddcbf7d
+- Our 8 scored runs of one notebook family (B12), submission ref: public score
+  56832595: 33.37, 57052442: 29.69, 56858951: 28.24, 56919974: 26.76, 57153031: 26.21,
+  57760408: 25.76, 57815956: 23.82, 57904835: 25.54 (mean 27.42, SD 2.99).
+  The first five are byte-identical reruns (SD 2.87).
+- Code (in our repo, analysis/s37/), SHA-256:
+  v8_sealed_prediction.py 7d7d547f3c25a1146c2ff4228b2fd3aefd166c0a54f62931f804b9877e581353
+  v8b_hetero_skill.py     2d55c7b86c833f564f2c1f35a147debcb1dcef24dddaa729c25809f271ede84f
+  v8_extras.py            5d4767e4adc9babfaf48774f4f0165426756db8e9bab9cc4c9bf94ba0de39e70
+
+THEORY (lottery model, H)
+A run's score on one half of the hidden games = the agent's skill + run noise with SD sigma of about
+2.9 points, independent between the public and private halves. A team's public score is its best run,
+so a team that submits more often holds more lottery tickets. Fitted to the 2,259 teams with public
+scores in [20, 40) (truncated likelihood, sigma fixed at 2.87): skill mean 25.0, skill SD 1.3 for teams
+with one submission rising to 2.7 at 100 submissions, every submission counts as a draw (f = 1.0), and
+no skill gain with submission count (beta = 0 is the best fit at each sigma tried from 2.3 to 3.3).
+A constant skill SD (Normal(24.97, 2.25^2)) gives nearly the same predictions; the ranges cover both.
+A team's private score = its skill + the better of the private-half draws of its 2 selected runs
+(1 draw if it has one submission).
+Alternative S (low noise): sigma = 1.0 with a real skill gain of 0.5 points per doubling of the
+submission count. On the public board alone S and H at sigma 2.3 fit about equally well
+(log-likelihood -5442 and -5445); H at sigma 2.87 fits worse (-5457). Both models are crude, so the
+private board decides.
+
+DEFINITIONS
+- Boards: the final public and private ARC-AGI-3 leaderboards as first published by Kaggle after the
+  2026-11-02 23:59 UTC close, matched by team.
+- C = teams whose final public score is in [20, 40). n = SubmissionCount on the final public board.
+- Spearman uses average ranks for ties. "Top 10%" = the top 10% of C on the named board.
+- D = mean(private - public) over teams in C with n = 1 (an estimate of the board-wide shift).
+- Ranges are 90% intervals of the posterior predictive, widened to cover sigma in [2.3, 3.3] and both
+  skill-spread variants.
+
+PREDICTIONS (H value and range; S value; the "fails if" lines are fixed now)
+P1 Spearman(public, private) within C: H 0.39 (0.28 to 0.57). S 0.90. H fails if above 0.70.
+P2 Share of C's public top 10% that is also in C's private top 10%: H 30% (20% to 42%). S 71%.
+   Pure chance is 10%. H fails if above 55%.
+P3 Mean private score of teams in C with n >= 64 minus that of teams in C with n = 1. The same gap is
+   5.42 points on the 19:58 public board. H 0.9 (0.0 to 1.7). S 3.6. H fails if above 2.5.
+P4 Mean(public - private) over C's public top 10% minus mean(public - private) over all of C:
+   H 2.7 points (1.9 to 3.3). S 0.70. H fails if below 1.3.
+P5 Spearman(public, private) among teams with a final public score >= 40 (27 teams at 19:58):
+   H 0.89 (0.78 to 0.96). H fails if below 0.60. Noise reorders the crowd, not the top.
+P6 Our own runs (evaluated if Kaggle shows private scores for all our submissions):
+   a) SD of the private scores of our 8 B12-family runs: 1.7 to 4.2. H fails if outside 1.2 to 5.5.
+   b) Forecast: 56832595 (public 33.37, our best) scores private - D = 28 (22.5 to 34.5), back near
+      the family mean.
+   c) Forecast: our team's private percentile within C is about 74% (15% to 99%), down from 92.5%
+      on the public board.
+
+DECISION RULE
+H passes if none of P1 to P4 crosses its "fails if" line and at least 3 of them fall inside their H
+range. H fails if 2 or more of P1 to P4 cross their lines. P1 below 0.25 or P2 below 17% would mean
+more noise than we measured: right direction, size underestimated. We will publish this file and the
+outcome, whatever it is.

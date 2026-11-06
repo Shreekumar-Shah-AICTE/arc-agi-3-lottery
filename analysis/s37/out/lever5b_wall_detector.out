@@ -1,0 +1,49 @@
+level-attempt checkpoints: 5677 rows, 38 runs, 25 games; H = 30000
+
+C = 5k tokens into the attempt: n 1621, wall-like share 0.39
+  leave-one-game-out logistic AUC 0.544
+  univariate AUC (0.5 = no signal; <0.5 = higher value means crack soon):
+    has_prev               0.574
+    log_calls              0.440
+    frac_click             0.441
+    frac_tokens_last_call  0.557
+    level_index            0.550
+    click_novelty          0.454
+    log_prev_mean          0.539
+    log_actions            0.469
+
+C = 10k tokens into the attempt: n 1850, wall-like share 0.43
+  leave-one-game-out logistic AUC 0.491
+  univariate AUC (0.5 = no signal; <0.5 = higher value means crack soon):
+    log_prev_mean          0.591
+    log_calls              0.455
+    has_prev               0.537
+    frac_click             0.463
+    rep3                   0.471
+    frac_tokens_last_call  0.529
+    action_entropy         0.527
+    n_distinct_actions     0.526
+
+C = 20k tokens into the attempt: n 1448, wall-like share 0.50
+  leave-one-game-out logistic AUC 0.533
+  univariate AUC (0.5 = no signal; <0.5 = higher value means crack soon):
+    log_prev_mean          0.573
+    log_actions            0.437
+    log_calls              0.450
+    frac_tokens_last_call  0.541
+    n_distinct_actions     0.462
+    rep3                   0.466
+    action_entropy         0.470
+    actions_per_call       0.471
+
+C = 40k tokens into the attempt: n 758, wall-like share 0.58
+  leave-one-game-out logistic AUC 0.582
+  univariate AUC (0.5 = no signal; <0.5 = higher value means crack soon):
+    log_actions            0.406
+    log_max_call           0.439
+    log_calls              0.443
+    log_prev_mean          0.555
+    frac_tokens_last_call  0.549
+    actions_per_call       0.451
+    has_prev               0.534
+    n_distinct_actions     0.468

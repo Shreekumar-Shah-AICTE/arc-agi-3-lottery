@@ -1,0 +1,250 @@
+diff --git a/ARC3-Inference/inference/agent/tool_agent.py b/ARC3-Inference/inference/agent/tool_agent.py
+index 88457f7..7f08d23 100644
+--- a/ARC3-Inference/inference/agent/tool_agent.py
++++ b/ARC3-Inference/inference/agent/tool_agent.py
+@@ -3470,6 +3470,61 @@ class _ChatCompletionResult:
+     served_by: str = ""
+ 
+ 
++
++def _sdt_enabled() -> bool:
++    """S22 SDT arm: stall digest + trouble prompt, non-destructive.
++
++    FB25 transcripts (S21 H19, two runs): 37% of generated tokens go to final
++    levels that are never solved; P(solved | 60K tokens on the level) ~0.43, the
++    point where a level is more likely lost than won (0.62 at 40K, 0.24 at 80K); those stalls are deliberation-heavy (1.2-1.7K tokens per action
++    vs ~620 on solved levels) and rarely include a death, so the 2607.15439 trouble
++    trigger (GAME_OVER reset after > 50 level actions) almost never fires here.
++    SDT fires on level tokens instead (ARC3_SDT_TOKENS, then every ARC3_SDT_TOKENS2
++    more, at most ARC3_SDT_MAX per level) and on the published death trigger. It
++    appends a harness record of the level (actions by name, unused actions, deaths,
++    no-ops, distinct boards, clicks) and the section 12.5 trouble prompt to the next
++    user message. Game state, history, helpers and the scheduler clock are left
++    alone: _tokens_at_level_start is read, never written.
++    """
++    return _get_env_bool("ARC3_SDT", False)
++
++
++def _sdt_int(name: str, default: int, floor: int) -> int:
++    return max(floor, _get_env_int(name, default))
++
++
++def _sdt_min_remaining_frac() -> float:
++    return max(0.0, _get_env_float("ARC3_SDT_MIN_REMAINING_FRAC", 0.15))
++
++
++def _sdt_log_event(event: dict) -> None:
++    try:
++        path = os.environ.get("ARC3_SDT_LOG", "/kaggle/working/sdt_events.jsonl")
++        if not path:
++            return
++        with open(path, "a", encoding="utf-8") as f:
++            f.write(json.dumps(event, default=str) + "\n")
++    except Exception:
++        pass
++
++
++_SDT_LEVEL1 = (
++    "You are having trouble with the first level. This is a strong signal that you are probably "
++    "missing something important, because every level should be solvable in a single attempt.\n\n"
++    "Remember: this is a visual puzzle. Pay close attention to what the game is trying to communicate "
++    "through visual hints. The solution is likely simple. You may be overlooking key visual cues, "
++    "overthinking the problem, or getting stuck in tunnel vision."
++)
++_SDT_LATER = (
++    "You are having trouble with this level. This is a strong signal that you are probably missing "
++    "something important, because every level should be solvable in a single attempt.\n\n"
++    "Remember that the general goal is the same across all levels. The solution is likely simple. You "
++    "may be overlooking key visual cues, overthinking the problem, or getting stuck in tunnel vision.\n\n"
++    "Try to reason in terms of your world model. Analyze what might be missing from the model that "
++    "prevents you from solving this level."
++)
++
++
+ class ToolAgent:
+     """Direct tool-calling analyzer compatible with OpenAI-style endpoints."""
+ 
+@@ -6717,6 +6772,171 @@ class ToolAgent:
+         self._note_history_evicted()
+         return [system_message, *history]
+ 
++    def _sdt_level_record(self, solver: Any) -> dict:
++        entries = list(getattr(solver, "history_entries", None) or [])
++        acts: list[dict] = []
++        boards = set()
++        for entry in reversed(entries):
++            result = getattr(entry, "result", None) or {}
++            if not result or result.get("level_completed"):
++                break  # seed entry, or the action that completed the previous level
++            acts.append(result)
++            frame = getattr(entry, "frame", None)
++            if frame is not None:
++                boards.add(hash(frame.grid))
++        acts.reverse()
++        names: dict[str, int] = {}
++        clicks = set()
++        n_actions = deaths = no_ops = n_clicks = 0
++        valid: list[str] = []
++        for r in acts:
++            if r.get("valid_actions"):
++                valid = [str(v) for v in r.get("valid_actions") or []]
++            if r.get("game_over"):
++                deaths += 1
++            if str(r.get("action_name") or "").upper() == "RESET":
++                continue
++            n_actions += 1
++            label = to_model_action(r.get("action_name")) or str(r.get("action_name") or "?")
++            names[label] = names.get(label, 0) + 1
++            if r.get("no_op"):
++                no_ops += 1
++            if label == "MOUSE":
++                n_clicks += 1
++                data = r.get("action_data") or {}
++                clicks.add(json.dumps(data, sort_keys=True, default=str))
++        if not valid:
++            valid = list(getattr(self, "_current_valid_actions", None) or [])
++        unused = [v for v in valid if v not in names and v.upper() not in ("RESET", "UNDO", "ACTION7")]
++        return {"actions": n_actions, "names": names, "unused": unused, "deaths": deaths,
++                "no_ops": no_ops, "clicks": n_clicks, "click_cells": len(clicks), "boards": len(boards)}
++
++    def _sdt_text(self, rec: dict, level: int, level_tokens: int, reason: str) -> str:
++        n = rec["actions"]
++        tpa = int(level_tokens / max(1, n))
++        by_name = ", ".join(f"{k} {v}" for k, v in sorted(rec["names"].items(), key=lambda kv: -kv[1]))
++        parts = [f"{n} actions" + (f" ({by_name})" if by_name else "")]
++        if rec["unused"]:
++            parts.append("never used on this level: " + ", ".join(rec["unused"]))
++        if rec["clicks"]:
++            parts.append(f"{rec['clicks']} MOUSE click(s) on {rec['click_cells']} distinct target(s)")
++        parts.append(f"{rec['deaths']} game over(s)")
++        parts.append(f"{rec['no_ops']} action(s) that changed nothing")
++        costs = sorted(getattr(self, "_sdt_level_costs", None) or [])
++        cost_line = ""
++        if costs:
++            cost_line = f" Levels you completed in this game took about {costs[len(costs) // 2] // 1000}K tokens each."
++        record = (
++            f"[Harness record, level {level}] " + "; ".join(parts) + ". "
++            f"About {level_tokens // 1000}K reasoning tokens spent on this level so far, "
++            f"{tpa} per action." + cost_line
++        )
++        if reason == "death":
++            record += " The level has restarted from its initial state after the game over."
++        head = _SDT_LEVEL1 if level <= 1 else _SDT_LATER
++        goal = "the goal of the level" if level <= 1 else "how to solve the level"
++        steps = (
++            "Before your next action, do the following:\n"
++            "1. Analyze what you have already tried. Every attempt at the same level starts from the same "
++            "initial state, and the game is deterministic. Therefore, your previous attempts provide reliable "
++            "evidence about what does and does not work.\n"
++            "2. Identify what you may have missed.\n"
++            f"3. Formulate a new hypothesis about {goal}.\n"
++            "4. Explain what you are going to try next and why."
++        )
++        if tpa >= _sdt_int("ARC3_SDT_THINK_TPA", 1500, 1):
++            steps += (
++                "\n5. Prefer a short experiment that tells your top two hypotheses apart over more analysis: "
++                f"you have spent about {tpa} reasoning tokens per action on this level, and the board is the "
++                "only reliable evidence."
++            )
++        elif tpa <= _sdt_int("ARC3_SDT_ACT_TPA", 600, 1) and n >= 60:
++            steps += (
++                "\n5. Before moving again, check the new hypothesis against the moves you already made: "
++                f"{n} moves on this level have not completed it."
++            )
++        return record + "\n\n" + head + "\n\n" + steps
++
++    def _sdt_maybe_intervene(self, step_env: Any) -> None:
++        """S22 SDT arm (see _sdt_enabled). Runs at the start of every analyzer turn."""
++        if not _sdt_enabled() or getattr(self, "_sdt_disabled", False):
++            return
++        mark = (self._session_runtime_dir, getattr(self, "_tokens_at_level_start", 0))
++        prev = getattr(self, "_sdt_mark", None)
++        if prev != mark:
++            if prev is not None and prev[0] == mark[0]:
++                spent = int(mark[1] - prev[1])
++                self._sdt_level_costs = list(getattr(self, "_sdt_level_costs", None) or []) + [spent]
++                if getattr(self, "_sdt_count", 0) > 0:
++                    event = {"event": "cleared_after_sdt", "game": str(mark[0]), "fires": self._sdt_count,
++                             "level_tokens": spent,
++                             "tokens_since_fire": int(self._session_generated_tokens - self._sdt_fire_tokens0),
++                             "t": time.time()}
++                    _sdt_log_event(event)
++                    log.warning("#OURS_SDT %s", json.dumps(event, default=str))
++            else:
++                self._sdt_level_costs = []
++            self._sdt_mark = mark
++            self._sdt_count = 0
++            self._sdt_fire_tokens0 = mark[1]
++            self._sdt_fire_actions0 = 0
++            return
++        if getattr(self, "_resume_after_yield", False):
++            return  # mid-turn resumption: wait for a clean turn boundary
++        if self._sdt_count >= _sdt_int("ARC3_SDT_MAX", 2, 0):
++            return
++        solver = getattr(step_env, "__self__", None)
++        if solver is None or not hasattr(solver, "history_entries"):
++            self._sdt_disabled = True
++            return
++        level_tokens = int(self._session_generated_tokens - mark[1])
++        since = int(self._session_generated_tokens - self._sdt_fire_tokens0)
++        need = _sdt_int("ARC3_SDT_TOKENS", 60000, 1000) if self._sdt_count == 0 else _sdt_int("ARC3_SDT_TOKENS2", 50000, 1000)
++        rec = None
++        reason = ""
++        if since >= need:
++            reason = "tokens"
++        else:
++            summary = self._last_step_summary or {}
++            if summary.get("game_over") and not summary.get("stale"):
++                rec = self._sdt_level_record(solver)
++                if rec["actions"] - self._sdt_fire_actions0 > _sdt_int("ARC3_SDT_DEATH_ACTIONS", 50, 0):
++                    reason = "death"
++        if not reason:
++            return
++        remaining = None
++        try:
++            cap = getattr(solver.solver, "max_runtime_s_per_game", None)
++            if cap:
++                remaining = float(solver.started_at) + float(cap) - time.monotonic()
++                soft = solver.solver.soft_time_remaining_seconds()
++                if soft is not None:
++                    remaining = min(remaining, float(soft))
++                if remaining < _sdt_min_remaining_frac() * float(cap):
++                    return
++        except Exception:
++            remaining = None
++        if callable(getattr(solver, "should_stop", None)) and solver.should_stop():
++            return
++        if rec is None:
++            rec = self._sdt_level_record(solver)
++        level = 1
++        try:
++            level = int(solver.current_frame().level)
++        except Exception:
++            pass
++        text = self._sdt_text(rec, level, level_tokens, reason)
++        base_notice = getattr(self, "_retained_clear_notice", "") or ""
++        self._retained_clear_notice = (text + ("\n\n" + base_notice if base_notice else "")).strip()
++        self._sdt_count += 1
++        self._sdt_fire_tokens0 = self._session_generated_tokens
++        self._sdt_fire_actions0 = rec["actions"]
++        event = {"event": "fire", "game": str(mark[0]), "n": self._sdt_count, "reason": reason, "level": level,
++                 "level_tokens": level_tokens, "actions": rec["actions"], "deaths": rec["deaths"],
++                 "unused": rec["unused"], "boards": rec["boards"], "remaining_s": remaining, "t": time.time()}
++        _sdt_log_event(event)
++        log.warning("#OURS_SDT %s", json.dumps(event, default=str))
++
+     def analyze(
+         self,
+         state_path: Path,
+@@ -6738,6 +6958,11 @@ class ToolAgent:
+             if solver_obj is not None:
+                 solver_obj.action_guard_hook = self._action_guard_hook
+         self._current_valid_actions = _normalize_valid_actions(valid_actions)
++        try:
++            self._sdt_maybe_intervene(step_env)
++        except Exception as exc:  # the arm must never break a game
++            self._sdt_disabled = True
++            log.warning("#OURS_SDT error %r; arm disabled for this game", exc)
+ 
+         analyzer_log = transcript_path or (state_path.parent / f"{state_path.stem}_analyzer.txt")
+         prompt_log = _resolve_prompt_log_path(state_path)

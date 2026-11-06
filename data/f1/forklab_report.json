@@ -1,0 +1,76 @@
+{
+ "n_rows": 256,
+ "n_prefix_ok": 256,
+ "n_stopped": 158,
+ "arms": {
+  "C1": {
+   "n": 24,
+   "clear": 0.125,
+   "mean_capped_cost": 38531,
+   "median_tokens_cleared": 31835
+  },
+  "C2": {
+   "n": 24,
+   "clear": 0.083,
+   "mean_capped_cost": 38320,
+   "median_tokens_cleared": 19843.0
+  },
+  "K8": {
+   "n": 25,
+   "clear": 0.08,
+   "mean_capped_cost": 38961,
+   "median_tokens_cleared": 27008.0
+  },
+  "NEG": {
+   "n": 25,
+   "clear": 0.08,
+   "mean_capped_cost": 38740,
+   "median_tokens_cleared": 24251.5
+  }
+ },
+ "AA_C2_vs_C1": {
+  "n_pairs": 24,
+  "d_clear": -0.042,
+  "d_clear_ci90": [
+   -0.125,
+   0
+  ],
+  "cost_ratio": 0.99,
+  "cost_ratio_ci90": [
+   0.958,
+   1.014
+  ],
+  "games_better": 0,
+  "games_worse": 1
+ },
+ "NEG_vs_C": {
+  "n_pairs": 24,
+  "d_clear": -0.021,
+  "d_clear_ci90": [
+   -0.062,
+   0
+  ],
+  "cost_ratio": 1.008,
+  "cost_ratio_ci90": [
+   1.0,
+   1.02
+  ],
+  "games_better": 0,
+  "games_worse": 1
+ },
+ "K8_vs_C": {
+  "n_pairs": 24,
+  "d_clear": -0.021,
+  "d_clear_ci90": [
+   -0.062,
+   0
+  ],
+  "cost_ratio": 1.02,
+  "cost_ratio_ci90": [
+   1.0,
+   1.055
+  ],
+  "games_better": 0,
+  "games_worse": 1
+ }
+}

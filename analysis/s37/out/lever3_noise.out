@@ -1,0 +1,59 @@
+runs ['b12_fb25', 'b28_ctl_fb25', 'b32_ctl_r2', 'b32_ctl_r3', 'b32_spec2_r2', 'b32_spec2_r3'] games 25
+
+run-level: levels, games won, total tokens (M), tokens of unfinished games (M)
+  b12_fb25       ctl   levels 106 won  8 tokens 4.60M unfinished 3.45M
+  b28_ctl_fb25   ctl   levels  95 won  7 tokens 4.58M unfinished 3.43M
+  b32_ctl_r2     ctl   levels 103 won  8 tokens 4.56M unfinished 3.34M
+  b32_ctl_r3     ctl   levels 107 won  8 tokens 4.49M unfinished 3.29M
+  b32_spec2_r2   spec2 levels  97 won  7 tokens 4.42M unfinished 3.44M
+  b32_spec2_r3   spec2 levels 107 won  8 tokens 4.31M unfinished 3.23M
+  corr(levels, total tokens) over runs: -0.24
+  per-game tokens across runs, CV median 0.27 (games not won in every run)
+
+wall-clock vs fixed-token design (same mean tokens per game), runs = 6
+  budget f | wall: mean  SD  sum per-game var | token: mean  SD  sum per-game var | ratio var(token)/var(wall) [game bootstrap 5-95%] | censored cells
+  mean 0.25 |   29.3   3.0   22.5 |   29.7   3.7   10.7 | 0.47 [0.27-0.74] | 3
+  mean 0.50 |   65.3   2.8   49.5 |   61.3   7.6   34.4 | 0.69 [0.60-0.79] | 6
+  mean 0.75 |   88.0   6.4   34.1 |   84.8   7.6   34.4 | 1.01 [0.85-1.28] | 20
+  mean 0.90 |   97.0   5.2   36.0 |   91.5   6.3   33.6 | 0.93 [0.80-1.09] | 36
+  mean 1.00 |  102.5   5.3   38.5 |   95.7   6.3   37.5 | 0.97 [0.85-1.14] | 58
+  min  0.25 |   29.3   3.0   22.5 |   18.2   3.2    6.0 | 0.27 [0.15-0.43] | 0
+  min  0.50 |   65.3   2.8   49.5 |   40.5   5.8   13.9 | 0.28 [0.18-0.41] | 0
+  min  0.75 |   88.0   6.4   34.1 |   67.2   8.0   31.6 | 0.93 [0.56-1.60] | 0
+  min  0.90 |   97.0   5.2   36.0 |   72.2   9.2   31.6 | 0.88 [0.49-1.66] | 0
+  min  1.00 |  102.5   5.3   38.5 |   79.0   7.9   33.4 | 0.87 [0.51-1.53] | 0
+
+at 121 min: var(total) 27.9 vs sum per-game var 38.5 (between-game covariance share -38%)
+
+per-game levels across runs at 121 min (wall) and at the fixed token budget (token):
+  ar25 nl 8: wall [8, 8, 8, 8, 8, 8] token [8, 7, 7, 8, 7, 7]
+  bp35 nl 9: wall [1, 1, 0, 0, 1, 1] token [1, 1, 0, 0, 1, 1]
+  cd82 nl 6: wall [6, 6, 6, 6, 0, 6] token [6, 6, 2, 6, 0, 4]
+  cn04 nl 6: wall [4, 1, 1, 5, 1, 4] token [4, 1, 1, 5, 1, 4]
+  dc22 nl 6: wall [4, 0, 4, 0, 4, 4] token [4, 0, 4, 0, 4, 4]
+  ft09 nl 6: wall [6, 4, 6, 6, 6, 6] token [6, 4, 6, 4, 6, 6]
+  g50t nl 7: wall [0, 0, 4, 4, 2, 0] token [0, 0, 2, 3, 2, 0]
+  ka59 nl 7: wall [5, 3, 3, 5, 5, 5] token [5, 3, 3, 5, 5, 5]
+  lf52 nl 10: wall [1, 1, 1, 1, 1, 1] token [1, 1, 1, 1, 1, 1]
+  lp85 nl 8: wall [8, 8, 8, 8, 8, 8] token [7, 7, 7, 7, 7, 8]
+  ls20 nl 7: wall [1, 4, 4, 4, 5, 2] token [1, 4, 3, 4, 4, 2]
+  m0r0 nl 6: wall [5, 5, 5, 5, 5, 6] token [5, 5, 4, 5, 5, 6]
+  r11l nl 6: wall [6, 6, 6, 6, 6, 5] token [6, 5, 5, 3, 6, 5]
+  re86 nl 8: wall [5, 5, 6, 6, 6, 7] token [5, 5, 6, 6, 6, 7]
+  s5i5 nl 8: wall [2, 2, 1, 1, 2, 2] token [2, 2, 1, 1, 2, 2]
+  sb26 nl 8: wall [8, 8, 8, 8, 8, 8] token [7, 7, 8, 6, 8, 8]
+  sc25 nl 6: wall [4, 0, 6, 4, 4, 0] token [4, 0, 4, 4, 4, 0]
+  sk48 nl 8: wall [1, 0, 0, 0, 0, 0] token [1, 0, 0, 0, 0, 0]
+  sp80 nl 6: wall [2, 1, 1, 1, 1, 4] token [2, 1, 1, 1, 1, 4]
+  su15 nl 9: wall [3, 6, 3, 4, 4, 3] token [3, 6, 3, 4, 4, 3]
+  tn36 nl 7: wall [4, 3, 4, 3, 1, 5] token [4, 3, 4, 3, 1, 5]
+  tr87 nl 6: wall [6, 6, 6, 6, 6, 6] token [5, 4, 6, 6, 6, 5]
+  tu93 nl 9: wall [8, 8, 8, 8, 5, 9] token [7, 8, 8, 8, 5, 9]
+  vc33 nl 7: wall [7, 7, 3, 7, 7, 6] token [7, 6, 3, 7, 6, 6]
+  wa30 nl 9: wall [1, 2, 1, 1, 1, 1] token [1, 2, 1, 1, 1, 1]
+
+shared-server covariance test (each game's runs shuffled independently, 20000 shuffles):
+  f 0.25: var(total) observed   9.1, null median  20.3, P(null <= observed) = 0.133
+  f 0.50: var(total) observed   7.9, null median  44.3, P(null <= observed) = 0.021
+  f 0.75: var(total) observed  41.2, null median  30.0, P(null <= observed) = 0.695
+  f 1.00: var(total) observed  27.9, null median  33.9, P(null <= observed) = 0.385

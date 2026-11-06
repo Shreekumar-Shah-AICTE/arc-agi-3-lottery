@@ -1,0 +1,8 @@
+V5 seal timing (checked 4 Nov 2026 ~18:58 UTC)
+sealed file analysis/s37/sealed/v5_budget_prediction.txt (sha256 a2161efb...), commit b6cd4d3, committed 2026-11-04T10:17:36Z
+pushed to GitHub (private repository): PushEvent created_at 2026-11-04T10:18:13Z, head b6cd4d3 (GitHub events API, repos/<owner>/arc/events)
+post-seal note analysis/s37/sealed/v5_post_seal_note.txt: commit f2a04ca, committed 2026-11-04T10:48:11Z
+V5 run (kaggle/b12_fb50, paperdata/runs/v5_fb50/benchmark.json): start_time 2026-11-04T10:28:23Z, end_time 2026-11-04T14:31:28Z
+OpenTimestamps: Bitcoin block 974519, block time 2026-11-04T10:52:51Z (out/v5_ots_check.txt)
+push to run start: 10 minutes; run start to Bitcoin anchor: 24 minutes; Bitcoin anchor to run end: 3.6 hours
+times (UTC, hh:mm): commit 10:17, push 10:18, run start 10:28, post-seal note 10:48, anchor 10:52, run end 14:31

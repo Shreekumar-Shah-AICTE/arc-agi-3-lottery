@@ -1,0 +1,43 @@
+b10_x9          games  10  official  12.76  completion-only  16.10  loss 20.7%
+b12_fb25        games  25  official  48.32  completion-only  50.95  loss 5.2%
+b12_ht          games  25  official  52.20  completion-only  52.70  loss 0.9%
+b12_ht2         games  25  official  49.80  completion-only  53.33  loss 6.6%
+b12_len         games  25  official  50.66  completion-only  52.13  loss 2.8%
+b12_sdt         games  25  official  44.77  completion-only  47.19  loss 5.1%
+b12_sdt_r2      games  25  official  48.35  completion-only  50.35  loss 4.0%
+b12_x7b         games  25  official  47.44  completion-only  50.17  loss 5.4%
+b12d25          games  25  official  14.55  completion-only  15.30  loss 4.9%
+b12d25_r2       games  25  official  18.41  completion-only  18.96  loss 2.9%
+b13_x6d16       games  25  official  14.30  completion-only  14.63  loss 2.3%
+b15_vllm        games  25  official  23.58  completion-only  24.87  loss 5.2%
+b15_vllm_r2     games  25  official  16.87  completion-only  17.36  loss 2.9%
+b15c_fb25       games  25  official  42.85  completion-only  46.70  loss 8.2%
+b1_franzen      games  10  official  44.44  completion-only  44.63  loss 0.4%
+b1c_ctrl        games  10  official  41.66  completion-only  43.63  loss 4.5%
+b23_d27         games  25  official  10.17  completion-only  11.87  loss 14.3%
+b23_tc27        games  25  official  10.08  completion-only  11.85  loss 14.9%
+b24_g4          games  25  official   0.23  completion-only   0.77  loss 70.1%
+b28_ctl_fb25    games  25  official  42.59  completion-only  43.78  loss 2.7%
+b28_tc_fb25     games  25  official  30.34  completion-only  35.56  loss 14.7%
+b29_occ_fb25    games  25  official  48.65  completion-only  50.07  loss 2.8%
+b2t_spec4       games  10  official   0.00  completion-only   0.00  loss n/a
+b30_safe        games   1  official  47.62  completion-only  47.62  loss 0.0%
+b31_spec1_fb25  games  25  official  45.86  completion-only  48.58  loss 5.6%
+b31_spec2_fb25  games  25  official  54.57  completion-only  55.40  loss 1.5%
+b32_ctl_r2      games  25  official  47.75  completion-only  49.48  loss 3.5%
+b32_ctl_r3      games  25  official  50.38  completion-only  52.36  loss 3.8%
+b32_spec2_r2    games  25  official  42.77  completion-only  45.04  loss 5.0%
+b32_spec2_r3    games  25  official  49.17  completion-only  52.51  loss 6.4%
+b3_x2           games  10  official  40.11  completion-only  40.99  loss 2.1%
+b4_x6           games  10  official  46.91  completion-only  47.68  loss 1.6%
+b5_x2ho         games  15  official   7.06  completion-only   7.42  loss 4.8%
+b5c_ctrlho      games  15  official   7.33  completion-only   8.64  loss 15.2%
+b7_x6ho         games  15  official  13.26  completion-only  15.38  loss 13.8%
+b7c_ctrlho2     games  15  official  10.22  completion-only  10.83  loss 5.6%
+b8_x7           games  10  official  25.72  completion-only  25.90  loss 0.7%
+b9_x8           games  10  official  44.81  completion-only  47.34  loss 5.3%
+f1_forklab      games 256  official  18.03  completion-only  18.50  loss 2.5%
+B12 family (13 runs): loss median 5.0%, range 0.9% to 8.2%
+four runs first quoted: loss median 3.9%, range 2.9% to 5.2%
+all 38 development runs with a completed level: loss median 4.9%, range 0.0% to 70.1%
+cleared levels, 13 family runs, all 25 games: n 1353; actions / human baseline median 0.65 (quartiles 0.44 to 0.93); at the 1.15 cap 75%; slower than the baseline 19%

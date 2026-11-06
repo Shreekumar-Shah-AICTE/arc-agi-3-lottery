@@ -1,0 +1,13 @@
+sealed table rows 13; control mean tokens 4.5585M; per-game budget 7260 s
+t1_fb25_nospec: tokens 3.296M (r 0.723), levels 86, completed 5, never started 2 (wa30, su15); started after half the budget 5; last start s5i5 at 85 min
+  exploratory: sealed band at r 0.723: 86.7 (77.6 to 96.0); observed 86 -> inside (not a test: the run is invalid)
+t1r_fb25_nospec: tokens 3.333M (r 0.731), levels 82, completed 5, never started 1 (su15); started after half the budget 5; last start s5i5 at 77 min
+  exploratory: sealed band at r 0.731: 87.2 (78.1 to 96.4); observed 82 -> inside (not a test: the run is invalid)
+t1c_fb25_ctl: tokens 4.545M (r 0.997), levels 112, completed 8, never started 0 (-); started after half the budget 3; last start lf52 at 99 min
+b12_fb25: tokens 4.601M (r 1.009), levels 106, completed 8, never started 0 (-); started after half the budget 5; last start lf52 at 94 min
+b28_ctl_fb25: tokens 4.582M (r 1.005), levels 95, completed 7, never started 0 (-); started after half the budget 2; last start lf52 at 69 min
+b32_ctl_r2: tokens 4.562M (r 1.001), levels 103, completed 8, never started 0 (-); started after half the budget 1; last start lf52 at 89 min
+b32_ctl_r3: tokens 4.489M (r 0.985), levels 107, completed 8, never started 0 (-); started after half the budget 2; last start lf52 at 86 min
+last game start in the 5 control runs (4 controls and T1c): 69 to 99 min of the 121-minute budget, which counts from the start of the run for every game
+controls [95, 103, 106, 107] mean 102.75 SD 5.44; with T1c (112): mean 104.60 SD 6.27
+same-agent FB25 runs [95, 97, 103, 106, 107, 107] mean 102.50 SD 5.28; with T1c: n 7 mean 103.86 SD 6.01

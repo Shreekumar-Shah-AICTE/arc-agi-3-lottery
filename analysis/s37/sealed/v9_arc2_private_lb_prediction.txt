@@ -1,0 +1,59 @@
+ARC Prize 2026 / ARC-AGI-2: sealed prediction of the private leaderboard (V9)
+Kaggle team "Shreekumar Shah" (user shreekumarshah). Written on 2026-11-04 at about 17:00 UTC, after the close and
+before Kaggle published the ARC-AGI-2 private leaderboard (withheld until verified). Only the SHA-256 of this file is
+made public now.
+
+DATA
+- Final public ARC-AGI-2 leaderboard, downloaded 2026-11-04 11:16 UTC with the Kaggle CLI: 3,627 teams with a score.
+  Raw CSV SHA-256 056acd05d38903bbde30794cbf8d23837c43cf241bc5038f15bac9831ba6fcc4; stored gzipped in our repo as
+  analysis/s37/data/lb/arc-agi-2_public_final_20261104T1116.csv.gz (SHA-256 45b825398ade0595b4e76ee446827c1d7c3d6e4adb15fcbabe3afec3371fe614).
+- Public and private are each about 50% of the hidden test data (Kaggle leaderboard page).
+- Our 7 scored ARC-AGI-2 draws of one public test-time-training notebook lineage: 4 byte-identical resubmits
+  (30.14, 29.72, 30.14, 30.56; SD 0.34) and 3 forks (29.72, 29.31, 28.06; SD 0.86). Pooled within-group SD 0.60
+  (5 degrees of freedom); SD of all 7 is 0.81. Our finals: 57153034 (30.56) and 57016836 (30.14).
+
+THEORY (the lottery model sealed for ARC-AGI-3 on 2 Nov, refitted to ARC-AGI-2)
+On the plateau, a team's best public score = its skill + the best of k noisy draws. Noise SD sigma per half-board,
+independent between the public and private halves; k ~ Binomial(n, f) given k >= 1, n = SubmissionCount. Skill ~
+Normal(mu + beta x (log2 n - mean log2 n), tau^2) (model HB; beta = 0 is model H). Private score = skill + the better
+of the 2 selected runs' private-half draws (1 draw if k = 1). For each sigma, mu, tau, f and beta are fitted to the
+teams with public scores in [27, 35) (truncated likelihood); the private board is then simulated (800 replicates).
+The public board alone barely separates sigma (log-likelihood -3311.8 at 0.3, -3293.8 at 0.6, -3290.7 at 0.81,
+-3287.2 at 1.0, -3296.2 at 1.3), so sigma is fixed from our own reruns, not from the board.
+PRIMARY: sigma = 0.6 (our pooled same-code SD), model HB (mu 30.14, tau 1.0, f 0.3, beta 0.3).
+NAMED ALTERNATIVES: sigma = 0.81 (SD of all our 7 draws); sigma = 1.0 (best public-board fit); S, low noise
+(sigma = 0.3, beta 0.4: the submission-count gap is mostly skill).
+
+DEFINITIONS
+- Boards: the final public board above and the private ARC-AGI-2 board as first published by Kaggle, matched by
+  TeamId. Teams without a private score are dropped and counted.
+- C = teams with a final public score in [27, 35) (2,133 teams). n = SubmissionCount on the public board above.
+- Spearman uses average ranks for ties. Public top 10% of C = public score >= the 90th percentile within C (32.22;
+  k = 271 teams); private top 10% = the top k of C by private score.
+- Ranges for the primary are 90% predictive intervals widened to cover H and HB at sigma 0.45 to 0.81.
+
+PREDICTIONS (primary value [range]; sigma 0.81 / sigma 1.0 / S)
+P1 Spearman(public, private) within C: 0.82 [0.65, 0.91]; 0.69 / 0.52 / 0.95.
+P2 Share of C's public top 10% also in C's private top 10%: 60% [43%, 73%]; 48% / 37% / 79%. Chance is 10%.
+P3 Mean private score of C teams with n >= 64 minus that of C teams with n = 1 (64 vs 282 teams; the same gap is 2.87
+   on the public board): 2.0 [1.0, 2.3]; 1.6 / 1.2 / 2.4.
+P4 Mean(public - private) over C's public top 10% minus mean(public - private) over all of C: 0.48 [0.29, 0.88];
+   0.72 / 1.08 / 0.17.
+P5 Spearman(public, private) among the 106 teams with a public score >= 40: about 0.99. Fails if below 0.90.
+P6 Forecast only: our team's private percentile within C is 43% (14% to 77%); public 45%.
+
+DECISION RULE
+Primary passes if at least 3 of P1 to P4 fall inside their ranges. It fails if 2 or more fall outside on the same
+side: "less noise than measured" (P1, P2 or P3 above, P4 below) or "more noise" (the opposite). Otherwise mixed.
+Implied sigma: each of P1 to P4 is turned into the sigma whose HB row predicts it (linear interpolation in the table
+of score_v9.py, sigma 0.3 to 1.3). The model's structure passes if all four implied values exist and the largest is
+at most 1.5 times the smallest, whatever sigma they agree on; it fails otherwise. The board favors the named value
+nearest the median implied sigma. Scorer: analysis/s37/score_v9.py. We will publish this file and the outcome,
+whatever it is.
+
+FILES (SHA-256, repo analysis/s37/)
+  v9_arc2_sealed_model.py  4976923060a8af280525bba5b48c96756bd45e6489d294e80879d7d58333a58c
+  v9_extras.py             796a5ea28a173c8f5662d28cb3d2675ca1d53793dba44372c923c319e5b4b3a3
+  v9_seal_table.py         c6dae6d6036c77874eb1f98cb9573c4561c7f057e07cc4624ccd03a237b7b452
+  score_v9.py              0fd87d77a8824c42ed68a6bedf26f783c0098088a26151acd61ccbc30958792a
+  score_sealed.py          f85f25b390ff472fdfd8386088c4fdf8b62ed247a82207fee0e1f61a34a59315

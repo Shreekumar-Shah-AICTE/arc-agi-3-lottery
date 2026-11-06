@@ -1,0 +1,6 @@
+four controls, dev (10 games): attempts 271; q 0.000 median 16.9k s 1.00; levels per run 64.5 of 72 (90%)
+four controls, holdout (15 games): attempts 209; q 0.110 median 35.7k s 1.05; levels per run 38.2 of 111 (34%)
+four controls, all 25: attempts 480; q 0.060 median 22.1k s 1.05; levels per run 102.8 of 183 (56%)
+eight runs (7 at 121 min + V5), dev (10 games): attempts 546; q 0.000 median 16.9k s 1.00; levels per run 65.2 of 72 (91%)
+eight runs (7 at 121 min + V5), holdout (15 games): attempts 457; q 0.070 median 40.3k s 1.05; levels per run 43.2 of 111 (39%)
+eight runs (7 at 121 min + V5), all 25: attempts 1003; q 0.040 median 24.2k s 1.10; levels per run 108.5 of 183 (59%)

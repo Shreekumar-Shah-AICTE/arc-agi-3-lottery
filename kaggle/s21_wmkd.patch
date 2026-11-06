@@ -1,0 +1,209 @@
+diff --git a/ARC3-Inference/inference/agent/python_tool_sandbox.py b/ARC3-Inference/inference/agent/python_tool_sandbox.py
+--- a/ARC3-Inference/inference/agent/python_tool_sandbox.py
++++ b/ARC3-Inference/inference/agent/python_tool_sandbox.py
+@@ -604,6 +604,168 @@
+             ]
+ 
+         runtime_globals["action"] = action
++
++        # ---- S20 WMK: world-model toolkit (retrodiction check, bounded BFS, verified execution) ----
++        def _wmk_short(value, limit=300):
++            text = repr(value)
++            return text if len(text) <= limit else text[:limit] + "...<%d chars>" % len(text)
++
++        def _wmk_result_dict(result):
++            if isinstance(result, dict):
++                return result
++            return dict(getattr(result, "__dict__", {}) or {})
++
++        def _wmk_parse_label(label):
++            # History labels are model-facing strings: "UP", "SPACE", "MOUSE(row=3, col=4)".
++            # Convert MOUSE labels to the dict form action(...) accepts, so a model's step()
++            # sees the same action values in check_model, plan and run_plan.
++            text = str(label or "").strip()
++            if text.upper().startswith("MOUSE(") and text.endswith(")"):
++                fields = {}
++                for part in text[6:-1].split(","):
++                    if "=" in part:
++                        name, value = part.split("=", 1)
++                        try:
++                            fields[name.strip()] = int(value.strip())
++                        except ValueError:
++                            pass
++                if "row" in fields and "col" in fields:
++                    return {"action": "MOUSE", "row": fields["row"], "col": fields["col"]}
++            return text
++
++        def check_model(extract, step, scope="level", norm=None, show=3):
++            # Replay recorded transitions through your model.
++            #
++            # For each real (non-automatic, non-terminal) transition in scope ("level" = before and
++            # after on the current level, "game" = all), compares step(extract(before_frame), action)
++            # with extract(after_frame). Returns counts and the first `show` mismatches.
++            cur = runtime_globals.get("current_frame")
++            level = getattr(cur, "level", None)
++            checked = matched = errors = skipped_terminal = 0
++            mismatches = []
++            for index, tr in enumerate(runtime_globals.get("transitions") or []):
++                before, after = tr.before_frame, tr.after_frame
++                if before is None or after is None:
++                    continue
++                name = str(tr.action or "")
++                info = _wmk_result_dict(tr.result)
++                if name.upper().startswith("RESET") or info.get("automatic"):
++                    continue
++                if scope == "level" and not (
++                    getattr(before, "level", None) == level and getattr(after, "level", None) == level
++                ):
++                    continue
++                if info.get("game_over") or info.get("level_completed"):
++                    skipped_terminal += 1
++                    continue
++                checked += 1
++                act = _wmk_parse_label(name)
++                if norm is not None:
++                    act = norm(act)
++                try:
++                    predicted = step(extract(before), act)
++                    observed = extract(after)
++                except Exception as exc:
++                    errors += 1
++                    if len(mismatches) < show:
++                        mismatches.append({"transition": index, "action": name, "error": _wmk_short(exc, 200)})
++                    continue
++                if predicted == observed:
++                    matched += 1
++                elif len(mismatches) < show:
++                    mismatches.append({"transition": index, "action": name,
++                                       "predicted": _wmk_short(predicted), "observed": _wmk_short(observed)})
++            return {"checked": checked, "matched": matched, "errors": errors, "scope": scope,
++                    "skipped_terminal": skipped_terminal, "mismatches": mismatches}
++
++        def plan(start, step, is_goal, actions, max_states=200000, time_limit=20.0, key=None):
++            # Breadth-first search over YOUR model: shortest action list from `start` to a state
++            # with is_goal(state) True. step(state, action) returns the next state, or None when the
++            # action is blocked. States (or key(state)) must be hashable. Stops at max_states or
++            # time_limit seconds (keep it under the tool timeout).
++            import time as _wmk_time
++            from collections import deque as _wmk_deque
++            began = _wmk_time.monotonic()
++            keyfn = key or (lambda state: state)
++            try:
++                if is_goal(start):
++                    return {"path": [], "states": 1, "complete": True, "reason": "start is a goal"}
++                parent = {keyfn(start): None}
++            except Exception as exc:
++                return {"path": None, "states": 0, "complete": False, "reason": "start error: " + _wmk_short(exc, 200)}
++            frontier = _wmk_deque([start])
++            expanded = 0
++            while frontier:
++                if expanded % 256 == 0 and _wmk_time.monotonic() - began > time_limit:
++                    return {"path": None, "states": len(parent), "complete": False, "reason": "time_limit"}
++                state = frontier.popleft()
++                expanded += 1
++                state_key = keyfn(state)
++                for act in actions:
++                    try:
++                        nxt = step(state, act)
++                        if nxt is None:
++                            continue
++                        nxt_key = keyfn(nxt)
++                        if nxt_key in parent:
++                            continue
++                        parent[nxt_key] = (state_key, act)
++                        reached = is_goal(nxt)
++                    except Exception as exc:
++                        return {"path": None, "states": len(parent), "complete": False,
++                                "reason": "model error on action %s: %s" % (_wmk_short(act, 80), _wmk_short(exc, 200))}
++                    if reached:
++                        path = []
++                        cursor = nxt_key
++                        while parent[cursor] is not None:
++                            cursor, step_action = parent[cursor]
++                            path.append(step_action)
++                        path.reverse()
++                        return {"path": path, "states": len(parent), "complete": True, "reason": "goal"}
++                    if len(parent) >= max_states:
++                        return {"path": None, "states": len(parent), "complete": False, "reason": "max_states"}
++                    frontier.append(nxt)
++            return {"path": None, "states": len(parent), "complete": True,
++                    "reason": "exhausted: no goal state is reachable in your model"}
++
++        def run_plan(path, extract, step, state=None, time_limit=20.0):
++            # Execute `path` one real action at a time; after each, compare extract(current_frame)
++            # with step(state, action). Stops at the first mismatch, a level change, a game over, or
++            # time_limit seconds. Returns how far it got and what differed.
++            import time as _wmk_time
++            began = _wmk_time.monotonic()
++            act_fn = runtime_globals["action"]
++            if state is None:
++                state = extract(runtime_globals.get("current_frame"))
++            done = 0
++            path = list(path or [])
++            for act in path:
++                if _wmk_time.monotonic() - began > time_limit:
++                    return {"executed": done, "stopped": "time_limit", "remaining": path[done:]}
++                predicted = step(state, act)
++                try:
++                    outcome = act_fn([act])
++                except StaleStateActionError as exc:
++                    return {"executed": done, "stopped": "stale_state", "detail": _wmk_short(exc, 200),
++                            "remaining": path[done:]}
++                done += 1
++                outcome = outcome if isinstance(outcome, dict) else {}
++                for flag in ("run_complete", "done", "level_completed", "game_over"):
++                    if outcome.get(flag):
++                        return {"executed": done, "stopped": flag, "remaining": path[done:]}
++                observed = extract(runtime_globals.get("current_frame"))
++                if observed != predicted:
++                    return {"executed": done, "stopped": "mismatch", "action": act,
++                            "predicted": _wmk_short(predicted), "observed": _wmk_short(observed),
++                            "remaining": path[done:]}
++                state = observed
++            return {"executed": done, "stopped": "completed", "state": _wmk_short(state)}
++
++        if initial.get("wmk_enabled", False):
++            runtime_globals["check_model"] = check_model
++            runtime_globals["plan"] = plan
++            runtime_globals["run_plan"] = run_plan
++        # ---- end S20 WMK ----
+         if initial.get("animation_enabled"):
+             # Globals rather than attributes on last_transition: after a death
+             # the harness appends a RESET entry, so last_transition is the
+@@ -874,6 +1036,7 @@
+                 "repair_hints": repair_hints,
+                 "animation_enabled": animation_handler is not None,
+                 "timeout_seconds": timeout_seconds,
++                "wmk_enabled": os.environ.get("ARC3_WMK", "0").strip().lower() in {"1", "true", "on", "yes"},
+                 "sandbox_cwd": sandbox_dir,
+                 "state": initial_state,
+                 "color_chars": ARC_COLOR_CHARS,
+diff --git a/ARC3-Inference/inference/agent/tool_agent.py b/ARC3-Inference/inference/agent/tool_agent.py
+--- a/ARC3-Inference/inference/agent/tool_agent.py
++++ b/ARC3-Inference/inference/agent/tool_agent.py
+@@ -2653,6 +2653,16 @@
+     ]
+ 
+ 
++_WMK_ADDENDUM = """
++
++Planning helpers (preloaded in every `python` call). REQUIRED once you know how actions move things: before any batch of 3 or more actions, write `extract`/`step` for this level, run `check_model`, get the path from `plan` and execute it with `run_plan`; on a mismatch, fix `step` and re-check instead of guessing:
++- Write `extract(frame)` returning a small hashable state (e.g. a tuple of positions) and `step(state, action)` returning the next state, or None when the action is blocked. Use the same action values you pass to `action(...)`.
++- `check_model(extract, step, scope="level")` replays every recorded transition on this level through your model and returns how many matched plus the first mismatches. Run it before trusting a model.
++- `plan(start, step, is_goal, actions, max_states=200000, time_limit=20)` runs a breadth-first search over your model and returns the shortest action list to a state where `is_goal(state)` is true (`path`), or why it stopped.
++- `run_plan(path, extract, step)` executes a path one real action at a time and stops at the first observation your model did not predict, so a wrong model costs one action, not the whole sequence.
++"""
++
++
+ def _build_system_prompt(*, tool_output_tokens: int) -> str:
+     prompt = "You are a coding agent solving a grid-based puzzle game."
+     # ARC3_SYSTEM_PROMPT_PREFIX (read at call time): prepended verbatim as the
+@@ -2664,6 +2674,8 @@
+         prompt = f"{_prefix}\n\n{prompt}"
+     prompt += GAME_OVERVIEW_ADDENDUM
+     prompt += STRUCTURED_RUNTIME_STATE_ADDENDUM
++    if _get_env_bool("ARC3_WMK", False):
++        prompt += _WMK_ADDENDUM
+     if _explain_gameplay_changed():
+         prompt += GAMEPLAY_CHANGED_ADDENDUM.format(
+             border=f"{_get_env_int('ARC3_NOOP_GUARD_BORDER', 4)} cells"

@@ -1,0 +1,20 @@
+Sealed calculation inside the scheduler simulator: 100 worlds x 4 runs, 200 draws per state
+  fit on the 1x on  runs: q 0.060, median 22.3k, s 0.94
+  fit on the 1x off runs: q 0.062, median 22.2k, s 0.93
+  1x on                         106.5 levels
+  1x off                        103.2 levels
+  2x on                         139.2 levels
+  2x off                        135.2 levels
+  2x on at 121                  103.2 levels
+  sealed from 1x on             130.9 levels
+  sealed from 1x off            133.7 levels
+  sealed from 2x state at 121   134.2 levels
+  true gain, rule on (2x on - 1x on): +32.7 (SE 0.9)
+  sealed gain from 1x on states: +24.5 (SE 0.7)
+  true gain, rule off (2x off - 1x off): +31.9 (SE 0.9)
+  sealed gain from 1x off states: +30.4 (SE 0.7)
+  shortfall from 1x on states (sealed - true 2x on): -8.3 (SE 0.9)
+  shortfall from 1x off states (sealed - true 2x off): -1.5 (SE 0.8)
+  from the 2x state at 121: sealed further levels - true further levels: -5.0 (SE 0.8)
+  shortfall from 1x on states minus shortfall from 1x off states: -6.8 (SE 0.8)
+  further levels after minute 121 in the 2x runs: true 35.9, sealed calculation from that state 30.9

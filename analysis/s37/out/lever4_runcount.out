@@ -1,0 +1,34 @@
+Runs per arm to detect a true difference (power 0.8, two-sided 0.05)
+  leaderboard (SD 2.87 points per submission):
+    +1 points: 130 submissions per arm
+    +2 points: 33 submissions per arm
+    +3 points: 15 submissions per arm
+    +5 points: 6 submissions per arm
+    +8 points: 3 submissions per arm
+  dev, 25 public games x 121 min (SD 5.3 levels per run, mean 102.5):
+    +2% levels (+2.0): 105 runs per arm
+    +5% levels (+5.1): 17 runs per arm
+    +10% levels (+10.2): 5 runs per arm
+    +20% levels (+20.5): 2 runs per arm
+
+One run per arm: the smallest difference detectable at power 0.8 = 11.4 points (LB), 21.0 levels = 20% (dev)
+
+Best of n identical submissions (expected public best above the mean, sigma 2.87):
+    n   1: +0.00 points (e_n 0.00)
+    n   2: +1.62 points (e_n 0.56)
+    n   5: +3.34 points (e_n 1.16)
+    n  10: +4.42 points (e_n 1.54)
+    n  20: +5.36 points (e_n 1.87)
+    n  50: +6.45 points (e_n 2.25)
+    n 100: +7.20 points (e_n 2.51)
+    n 200: +7.88 points (e_n 2.75)
+
+t-test check (simulated, 40000 pairs per n, seed 0): formula n -> smallest n with power >= 0.8
+  LB +3 points: formula 15, t-test 16
+  LB +5 points: formula 6, t-test 7
+  dev +10% levels: formula 5, t-test 6
+  dev +20% levels: formula 2, t-test 3
+
+SD uncertainty (90% chi-square interval, normal runs assumed)
+  LB SD 2.87 from 5 runs: 1.86 to 6.81 points; runs per arm for +3.0: 7 to 81 (point estimate 15)
+  dev SD 5.3 from 6 runs: 3.56 to 11.07 levels; runs per arm for +10.2: 2 to 19 (point estimate 5)

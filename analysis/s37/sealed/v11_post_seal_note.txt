@@ -1,0 +1,16 @@
+V11 POST-SEAL NOTE (not part of the sealed test). Written 2026-11-05 ~14:42 UTC, after the seal (014d121, ~14:32 UTC,
+SHA-256 adb36d6c2c135b926aea761715b536803075aeffc8061878a901328babdc5684) and before any V11 game was played.
+The sealed rule (P-V11-1: PASS if N0 <= 1) is unchanged and is the only test. This note records a launch problem.
+
+1. Kernel shreekumarshah/arc3-v11-l1guard failed twice at setup, before any game was played: the first push returned
+   "Kernel push error: An error occurred while saving the entity changes"; the retry created version 1, and versions 1
+   (14:33 UTC) and 2 (14:38 UTC) both stopped in the bundle-copy cell with "cp: cannot stat
+   '/kaggle/input/datasets/dfranzen/taaf-kaggle-source-bundle-copy'". No model was loaded and no game started, so
+   neither produced any V11 data.
+2. A CPU-only check kernel (shreekumarshah/arc3-mount-check, 14:36 UTC) with the same dataset, model and competition
+   sources mounted that dataset at the expected path, so the problem is in the kernel entity left by the failed first
+   push, not in the notebook or the data.
+3. V11 is therefore launched under a fresh kernel, shreekumarshah/arc3-v11-l1guard-b, with the sealed notebook
+   (kaggle/v11_l1guard/b12_fb25.ipynb, unchanged since 014d121) and the same settings; only the id and title in
+   kernel-metadata.json differ. The two setup failures are not counted as the one rerun the sealed validity rule allows,
+   because they ran no game; that rerun remains available for a failure after setup.

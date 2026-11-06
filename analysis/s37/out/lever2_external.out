@@ -1,0 +1,11 @@
+run | games levels | tokens/game median | attempts cleared/cut | fit q median(k) s | model-expected levels vs actual
+chiakazirim_duck-qwen3-8-tuned               | 25  33 |     78k |  33/25 | q 0.22 med  24.2k s 1.00 |   32.7 vs 33
+foysalemonshanto_lb-9-arc3-duck-v12-with-qwe | 25  25 |    102k |  25/25 | q 0.00 med  65.1k s 1.40 |   24.8 vs 25
+jeroencottaar_tufa-labs-duck-harness-june-30 | 25  18 |     65k |  18/25 | q 0.37 med  28.1k s 1.05 |   18.4 vs 18
+keithtyser_duck-qwen3-8-flash-next-nvfp4-mtp | 25  36 |     79k |  36/25 | q 0.25 med  20.2k s 0.95 |   35.8 vs 36
+romantamrazov_the-agi-boys-i-am-better       | 10  35 |     62k |  35/ 9 | q 0.00 med  11.4k s 0.95 |   36.3 vs 35
+wuliao0_duck-qwen3-8-anim-base               | 25  35 |     73k |  35/25 | q 0.24 med  21.5k s 0.95 |   34.7 vs 35
+b12_fb25                                     | 25 106 |    174k | 106/17 | q 0.05 med  22.8k s 1.05 |   98.2 vs 106
+b28_ctl_fb25                                 | 25  95 |    187k |  95/18 | q 0.10 med  20.8k s 1.05 |   90.0 vs 95
+b32_ctl_r2                                   | 25 103 |    197k | 103/17 | q 0.04 med  23.5k s 1.10 |   99.8 vs 103
+b32_ctl_r3                                   | 25 107 |    164k | 107/17 | q 0.00 med  25.7k s 1.15 |  104.5 vs 107

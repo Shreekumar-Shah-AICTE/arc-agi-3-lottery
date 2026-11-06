@@ -1,0 +1,118 @@
+fit 4 controls (sealed fit): attempts 480 (open 69); q 0.060 median 22.1k s 1.05; unlimited cap, independent walls: 142 of 183
+fit 4 controls + V5: attempts 635 (open 83); q 0.040 median 24.9k s 1.10; unlimited cap, independent walls: 154 of 183
+fit 5 controls (with T1c) + V5: attempts 764 (open 100); q 0.030 median 24.9k s 1.10; unlimited cap, independent walls: 161 of 183
+fit 7 same-agent runs + V5: attempts 1003 (open 135); q 0.040 median 24.2k s 1.10; unlimited cap, independent walls: 154 of 183
+V5 observed: 141 levels at 242 min
+
+wall census (pooled fit q 0.040): 14 levels reached but never cleared in any of 8 runs
+  game level  runs-reaching  max-tokens  total-tokens  V5-tokens  P(wall)
+  dc22 L5    6      218k       880k      218k  1.00
+  ka59 L6    5      137k       413k      137k  1.00
+  sp80 L5    3      218k       474k      218k  1.00
+  s5i5 L4    2      345k       425k      345k  0.97
+  g50t L5    3      191k       316k      191k  0.97
+  bp35 L4    1      268k       268k      268k  0.74
+  cn04 L6    2       80k       144k       80k  0.61
+  ls20 L6    2      143k       163k      143k  0.58
+  lf52 L5    1      184k       184k      184k  0.56
+  wa30 L5    1      135k       135k      135k  0.41
+  tn36 L7    1       70k        70k       70k  0.20
+  su15 L9    1       50k        50k       50k  0.14
+  sk48 L5    1       40k        40k       40k  0.11
+  re86 L8    1        1k         1k      nank  0.04
+levels with P(wall) >= 0.5: 9; cap if those are fixed walls: 154 of 183
+levels cleared in some runs and open in others: 40
+
+per game over the 7 runs at 121 min: start minute (mean, range), levels (mean), games starting after minute 30
+  m0r0: start   0.4 min (   0-   1), levels  5.1 of 6
+  sk48: start   0.5 min (   0-   1), levels  0.1 of 8
+  cn04: start   0.6 min (   0-   1), levels  2.9 of 6
+  dc22: start   0.7 min (   0-   1), levels  2.9 of 6
+  tn36: start   0.7 min (   0-   1), levels  3.4 of 7
+  lp85: start   0.7 min (   1-   1), levels  8.0 of 8
+  bp35: start   0.8 min (   0-   1), levels  0.6 of 9
+  tu93: start   1.0 min (   0-   2), levels  7.7 of 9
+  ka59: start  11.1 min (   0-  38), levels  4.3 of 7
+  sc25: start  14.1 min (   1-  19), levels  3.4 of 6
+  vc33: start  14.7 min (   0-  37), levels  6.1 of 7
+  r11l: start  14.8 min (   0-  18), levels  5.9 of 6
+  sp80: start  17.4 min (  14-  20), levels  2.0 of 6
+  cd82: start  18.7 min (  17-  21), levels  5.1 of 6
+  ft09: start  20.5 min (  19-  22), levels  5.7 of 6
+  tr87: start  27.1 min (  19-  38), levels  6.0 of 6
+  ls20: start  37.1 min (  30-  40), levels  3.4 of 7
+  wa30: start  38.6 min (   0-  70), levels  1.1 of 9
+  g50t: start  41.3 min (  35-  47), levels  1.7 of 7
+  sb26: start  50.4 min (  44-  58), levels  8.0 of 8
+  ar25: start  50.4 min (  46-  58), levels  8.0 of 8
+  re86: start  54.8 min (  50-  64), levels  5.7 of 8
+  s5i5: start  54.9 min (  50-  64), levels  1.9 of 8
+  su15: start  67.0 min (  57-  78), levels  3.7 of 9
+  lf52: start  89.3 min (  69- 108), levels  1.0 of 10
+games starting after minute 30 on average: 9 (ls20, wa30, g50t, sb26, ar25, re86, s5i5, su15, lf52); their mean share of levels cleared 0.48 vs 0.65 for the rest
+
+game runs with 0 levels in the 7 runs at 121 min: run, game, start min, last step min, tokens
+  b12_fb25 g50t: start 47, last 58, tokens 78k, actions 41
+  b28_ctl_fb25 sk48: start 1, last 19, tokens 77k, actions 122
+  b28_ctl_fb25 dc22: start 1, last 15, tokens 56k, actions 156
+  b28_ctl_fb25 sc25: start 16, last 120, tokens 100k, actions 102
+  b28_ctl_fb25 g50t: start 40, last 85, tokens 132k, actions 56
+  b32_ctl_r2 sk48: start 0, last 119, tokens 90k, actions 23
+  b32_ctl_r2 bp35: start 0, last 121, tokens 65k, actions 18
+  b32_ctl_r3 sk48: start 1, last 19, tokens 82k, actions 50
+  b32_ctl_r3 bp35: start 1, last 14, tokens 79k, actions 16
+  b32_ctl_r3 dc22: start 1, last 16, tokens 65k, actions 101
+  b32_spec2_r2 sk48: start 1, last 20, tokens 87k, actions 52
+  b32_spec2_r2 cd82: start 19, last 69, tokens 116k, actions 48
+  b32_spec2_r3 sk48: start 1, last 20, tokens 70k, actions 56
+  b32_spec2_r3 sc25: start 19, last 37, tokens 66k, actions 99
+  b32_spec2_r3 g50t: start 43, last 62, tokens 88k, actions 43
+  t1c_fb25_ctl sk48: start 0, last 15, tokens 69k, actions 43
+  t1c_fb25_ctl bp35: start 1, last 18, tokens 77k, actions 16
+
+shelved game runs at 121 min (last logged step more than 30 minutes before the end of the budget):
+  50 of 175 game runs; at level 1 (0 levels cleared): 14; all-level games finished early are excluded (they stop because they are done)
+  0-level shelved game runs: tokens on level 1 when shelved: median 77k (range 56k-132k)
+  0-level game runs in total: 17, of which shelved: 14; shelved by minute 20 (last logged step at or before minute 20): 7
+  (games completed: 54 game runs)
+
+the 0-level games at 121 min, in V5 (242 min): levels, tokens on level 1, start and last step
+  bp35: 0 levels in 3 of 7 runs at 121 min; V5 3 of 9, level 1 took 41k tokens (cleared), start 1, last step 192 min
+  cd82: 0 levels in 1 of 7 runs at 121 min; V5 6 of 6, level 1 took 40k tokens (cleared), start 18, last step 51 min
+  dc22: 0 levels in 2 of 7 runs at 121 min; V5 4 of 6, level 1 took 72k tokens (cleared), start 1, last step 241 min
+  g50t: 0 levels in 3 of 7 runs at 121 min; V5 4 of 7, level 1 took 56k tokens (cleared), start 38, last step 242 min
+  sc25: 0 levels in 2 of 7 runs at 121 min; V5 6 of 6, level 1 took 84k tokens (cleared), start 18, last step 203 min
+  sk48: 0 levels in 6 of 7 runs at 121 min; V5 4 of 8, level 1 took 350k tokens (cleared), start 1, last step 242 min
+  all 6 cleared level 1 in V5: True; tokens on level 1 from 40k to 350k
+
+share of open attempts that are walls (posterior mean), by fit
+  four controls at 121 min, 4 controls (sealed fit): 42% of 69 open attempts
+  four controls at 121 min, 7 same-agent runs + V5: 28% of 69 open attempts
+  V5 at 242 min, 4 controls (sealed fit): 61% of 14 open attempts
+  V5 at 242 min, 7 same-agent runs + V5: 46% of 14 open attempts
+  7 same-agent runs at 121 min, 4 controls (sealed fit): 40% of 121 open attempts
+  7 same-agent runs at 121 min, 7 same-agent runs + V5: 27% of 121 open attempts
+
+distance to 85% (completion score, independent levels; budget per game at 1x 197,573 tokens as in distance_85.py)
+  4 controls (sealed fit) (q 0.060, median 22.1k, s 1.05): k=1 45.1 (103.0 levels); k=2 67.3 (134.1); k=inf 73.0 (142.0); no walls: 85% at about 1.7x
+  7 same-agent runs + V5 (q 0.040, median 24.2k, s 1.10): k=1 43.4 (101.2 levels); k=2 70.7 (140.2); k=inf 81.1 (154.4); no walls: 85% at about 1.9x
+
+summed per-game variance over the 7 runs: 30.4; part due to 0 levels vs some: 14.9 (49%; bootstrap over runs 90% interval 39% to 57%)
+  sc25 4.7 of 5.4, cd82 4.4 of 4.4, dc22 3.3 of 3.3, g50t 2.2 of 2.8, bp35 0.2 of 0.2, sk48 0.1 of 0.1
+
+within-game effect of a later start (7 runs, 175 game runs): -0.02 levels per 10 minutes later; permutation p = 0.767 (two-sided, start minutes shuffled within game)
+  within-game SD of the start minute: 9.1 min
+
+late starters (mean start after minute 30) in V5: start minute, levels at 242 min vs mean at 121 min
+  ls20: V5 start  35.4, levels 5 of 7 (121-min mean 3.4)
+  wa30: V5 start   0.3, levels 4 of 9 (121-min mean 1.1)
+  g50t: V5 start  37.9, levels 4 of 7 (121-min mean 1.7)
+  sb26: V5 start  45.5, levels 8 of 8 (121-min mean 8.0)
+  ar25: V5 start  45.7, levels 8 of 8 (121-min mean 8.0)
+  re86: V5 start  49.5, levels 6 of 8 (121-min mean 5.7)
+  s5i5: V5 start  47.1, levels 3 of 8 (121-min mean 1.9)
+  su15: V5 start  68.5, levels 8 of 9 (121-min mean 3.7)
+  lf52: V5 start  80.0, levels 4 of 10 (121-min mean 1.0)
+
+slot rule D' at the median shelved 0-level state (14 game runs: 51 actions, 77k tokens on level 1): A*M*C = 0.44 x norm(N); a game that has not started: 1.00 x norm(N)
+  priority of a game that has not started (norm(N) + 16): N=6: 18.62, N=7: 17.96, N=8: 17.53, N=9: 17.22, N=10: 17.00

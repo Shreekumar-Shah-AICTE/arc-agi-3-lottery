@@ -1,0 +1,22 @@
+V11 readout (v11_l1guard): 25 games in benchmark.json, 23 started, never started: ['lf52', 'su15']
+log: "#OURS_FORM ok version=d_prime" found; "#V11_L1GUARD ok" found (after it); guard hits 10; fresh games queued by D' 25
+validity: VALID (PARTIAL: some games never started)
+
+P-V11-1 (sealed): N0 = 1 started games ended with 0 levels (tn36)
+  rule: PASS if N0 <= 1, FAIL if N0 >= 2  ->  PASS  (scored among the 23 started games)
+  N0 counting the 2 never-started games as zeros: 3
+  reference N0 per run: 1, 4, 2, 3, 2, 3, 2 (mean 2.43)
+
+secondary (reported, not scored)
+  total levels: 103 of 183 (reference 106, 95, 103, 107, 97, 107, 112; mean 103.9, SD 6.0; z -0.14)
+  last game to start: wa30 at minute 84.2 (reference 69 to 108); next: s5i5 74.6, re86 70.7, g50t 68.6
+  games that never started: 2 (reference 0)
+  sk48: 1 of 8 levels, tokens 192k, start 14.0, last step 61.0 min
+  bp35: 1 of 9 levels, tokens 117k, start 14.6, last step 39.4 min
+  dc22: 4 of 6 levels, tokens 241k, start 0.0, last step 121.0 min
+  g50t: 2 of 7 levels, tokens 159k, start 68.6, last step 115.2 min
+  sc25: 5 of 6 levels, tokens 138k, start 46.4, last step 121.0 min
+  cd82: 6 of 6 levels, tokens 138k, start 46.3, last step 82.6 min
+  zero-level games: tokens on level 1, last logged step, shelved (last step more than 30 min before minute 121)
+    tn36: tokens 161k, start 14.3, last 61.9 min, actions 330, shelved yes
+  games completed (all levels): 6; total tokens 3.925M (FB25 control mean 4.5585M)

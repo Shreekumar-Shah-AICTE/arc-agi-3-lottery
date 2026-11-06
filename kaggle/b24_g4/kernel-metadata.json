@@ -1,0 +1,28 @@
+{
+ "id": "shreekumarshah/arc3-b24-g4-d25",
+ "title": "arc3-b24-g4-d25",
+ "code_file": "b24_g4.ipynb",
+ "language": "python",
+ "kernel_type": "notebook",
+ "is_private": true,
+ "enable_gpu": true,
+ "enable_tpu": false,
+ "enable_internet": false,
+ "keywords": [
+  "gpu"
+ ],
+ "dataset_sources": [
+  "dfranzen/pennyroyal-v253",
+  "dfranzen/taaf-kaggle-source-bundle-copy"
+ ],
+ "kernel_sources": [],
+ "competition_sources": [
+  "arc-prize-2026-arc-agi-3"
+ ],
+ "model_sources": [
+  "google/gemma-4/Other/gemma-4-31b-it-qat-w4a16-ct/2",
+  "google/gemma-4/Transformers/gemma-4-31b-it-qat-q4_0-unquantized-assistant/2"
+ ],
+ "docker_image": "gcr.io/kaggle-private-byod/python@sha256:57e612b484cf3df5026ee4dcc3cb176974b22b2bc0937fb1e16132a8be4cb13c",
+ "machine_shape": "NvidiaRtxPro6000"
+}

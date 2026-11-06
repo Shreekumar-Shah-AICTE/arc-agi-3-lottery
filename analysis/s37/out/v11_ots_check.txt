@@ -1,0 +1,7 @@
+V11 OpenTimestamps check (5 Nov 2026 ~17:00 UTC, after the run finished at ~16:55 UTC)
+sealed file: sealed/v11_l1guard_prediction.txt, committed 014d121 at 2026-11-05T14:32:01Z; kernel v1 pushed 14:40:45 UTC
+ots upgrade: complete; ots info:
+    verify BitcoinBlockHeaderAttestation(974681)
+    # Bitcoin block merkle root f18a4871bf8f3012aabcb08c5721c01297e56507e94512fb2efff0eda49f817f
+blockstream.info: block 974681 time 2026-11-05T15:34:29Z (15:34 UTC), merkle root f18a4871bf8f3012aabcb08c5721c01297e56507e94512fb2efff0eda49f817f (matches)
+so the prediction was anchored 54 minutes into the run and about 80 minutes before it finished
