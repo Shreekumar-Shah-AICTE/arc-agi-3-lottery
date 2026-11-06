@@ -60,7 +60,7 @@ const FINAL = process.argv.includes('--final');
 const left = (body.match(/\[(PRIVATE|LINK|TODO)[^\]]*\]/g) || []);
 if (FINAL && left.length) console.warn('WARNING --final: placeholders left:', JSON.stringify(left));
 const title = '<h1>The ARC-AGI-3 Lottery: a testable model of LLM-agent scores under Kaggle compute</h1>' +
-  (FINAL ? '<p>Shreekumar Shah (Kaggle: shreekumarshah). November 2026.</p>' :
+  (FINAL ? '<p>Shreekumar Shah (Kaggle: shreekumarshah). November 2026. Code, data and sealed files: <a href="https://github.com/Shreekumar-Shah-AICTE/arc-agi-3-lottery">github.com/Shreekumar-Shah-AICTE/arc-agi-3-lottery</a></p>' :
   '<p>Shreekumar Shah (Kaggle: shreekumarshah). Draft v0, ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC.</p>' +
   '<div class="draft">DRAFT. The placeholder [PRIVATE] marks results that do not exist yet. Every number is checked against paper/results.json.</div>');
 const html = `<!doctype html><html><head><meta charset="utf-8"><title>ARC-AGI-3 Lottery${FINAL ? '' : ' (draft)'}</title><style>${css}</style></head><body>${title}${md.render(body)}</body></html>`;

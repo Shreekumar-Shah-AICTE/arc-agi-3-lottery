@@ -13,7 +13,7 @@ The five sealed tests at a glance (times UTC; one paragraph per test below, and 
 | V11: first-level guard | 5 Nov, committed at 14:32; kernel pushed 14:40 | Bitcoin block 974681 at 15:34 | pass in one partial run: 1 of 23 started games at 0 levels; 2 never started |
 | Private ARC-AGI-2 board (V9) | 4 Nov | hash in a comment on the same Kaggle post; Bitcoin block 974554 at 17:27 | pending |
 
-Until its Bitcoin anchor, a sealed file is dated only by its GitHub push.
+Until its Bitcoin anchor, a sealed file is dated only by the history of our working repository on GitHub. That repository is private, and the public one is a later one-commit copy, so readers cannot check those times. For V5 this matters most, because its anchor came 24 minutes into the run. The Bitcoin proofs are in analysis/s37/sealed, and anyone can check them with OpenTimestamps.
 
 **Private ARC-AGI-3 board (sealed 2 November; pending).** Before Kaggle published the private board, we wrote down what
 the lottery model (H) and a low-noise alternative (S) predict for the crowd of teams with final public scores from 20 to

@@ -34,8 +34,7 @@ and per-game scores are uncorrelated within a run. Throughput is not the cause: 
 
 ## Result 2: predictions sealed before their outcomes were known
 
-Each prediction and its decision rule were hashed (SHA-256), time-stamped in Bitcoin (OpenTimestamps) and pushed to
-GitHub before the outcome was known; the private-leaderboard hashes were also posted on Kaggle (discussion 755123). Scorecard of the five tests: one
+Each prediction and its decision rule were hashed (SHA-256), time-stamped in Bitcoin (OpenTimestamps) and pushed to our private working repo on GitHub before the outcome was known; the private-leaderboard hashes were also posted on Kaggle (discussion 755123). Scorecard of the five tests: one
 pass, one partial pass, one unscored, two pending.
 
 - Doubling the play time per game (committed to GitHub ten minutes before the run started): 127 levels on the 25 public games (90% interval 110 to 145), against 95 to 107 levels
