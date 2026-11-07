@@ -1,0 +1,19 @@
+Noise breakdown: 400 H2 worlds x 7 runs, paired across 5 schedulers; 121 minutes; 43 s
+observed (seven 121-minute runs): run SD of levels 5.3 on six runs, 6.0 with the seventh; 2.43 zero-level games per run; last start minute 69 to 108; 0 / at-least-1 split 49% of the summed per-game variance (39% to 57%)
+  PS     levels  105.3; run SD  5.5 (variance  30.4, 90%  28.9 to  31.9); zero-level games 1.74; last start   0.0 min; 0/1 split share   7% (worlds 10-90% 0-21%)
+  FIFO   levels  104.5; run SD  5.5 (variance  29.9, 90%  28.4 to  31.3); zero-level games 1.77; last start  31.8 min; 0/1 split share   8% (worlds 10-90% 0-20%)
+  D'+st  levels  107.6; run SD  6.0 (variance  36.1, 90%  34.4 to  37.8); zero-level games 3.34; last start  31.8 min; 0/1 split share  36% (worlds 10-90% 14-55%)
+  D'     levels  106.6; run SD  5.8 (variance  33.7, 90%  32.0 to  35.5); zero-level games 3.14; last start  93.7 min; 0/1 split share  39% (worlds 10-90% 17-60%)
+  D'+g   levels  105.3; run SD  5.6 (variance  31.0, 90%  29.5 to  32.5); zero-level games 2.13; last start 102.1 min; 0/1 split share  20% (worlds 10-90% 2-40%)
+  shares of the D' run variance (bootstrap over worlds, 90%):
+    crack waits (PS)              90% (85% to 95%)
+    turn-taking (FIFO - PS)       -1% (-4% to 1%)
+    shelving (D'+st - FIFO)       18% (14% to 23%)
+    late starts (D' - D'+st)      -7% (-11% to -3%)
+    slot rule and queue together (D' - PS) 10% (5% to 15%)
+    priorities alone (D' - FIFO) 11% (7% to 16%)
+  paired differences of the mean level total (SE over worlds):
+    D' minus PS: +1.29 levels (SE 0.20)
+    D' minus FIFO: +2.17 levels (SE 0.21)
+    D'+st minus D': +1.02 levels (SE 0.11)
+    D'+g minus D': -1.36 levels (SE 0.14)

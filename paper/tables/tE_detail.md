@@ -7,8 +7,21 @@ seen V5, so this is a consistency check, not a test: it expects 101.2 levels at 
 budget (observed: 102.75 on average and 141). It calls 28% of the controls' open attempts walls. Fourteen levels were
 reached but never cleared in any of the eight runs, and the refit makes 9 of them walls with probability 0.5 or more.
 The clearest is level 5 of dc22: reached in 6 runs and left open after 880k tokens in total (218k in V5 alone). If
-those nine are fixed walls, unlimited play caps this agent at 154 of the 183 public levels. Another 40 levels were
+those nine are fixed walls, unlimited play caps this agent at 154 of the 183 public levels. The nine, so that other teams
+can check theirs: dc22 level 5, ka59 level 6, sp80 level 5, s5i5 level 4, g50t level 5, bp35 level 4, cn04 level 6, ls20
+level 6 and lf52 level 5 (analysis/s37/out/walls.out lists all 14 with their tokens). Another 40 levels were
 cleared in some runs and not in others.
+
+**Do the walls settle? (Section 4.3; exploratory, added 7 Nov 2026.)** analysis/s37/walls_followup_7nov.py refits the crack
+model by exact maximum likelihood. The likelihood is flat in q, so its values differ slightly from the sealed grid's
+(held-out, four controls: q 0.123 against 0.110). Censoring every attempt of the eight runs at 100k, 200k and 300k tokens
+gives q 0.049, 0.052 and 0.042 on all 25 games (0.038 with no cap) and 0.139, 0.126 and 0.094 on the held-out games
+(0.080). The Kaplan-Meier survival of all attempts is 0.076 at 200k tokens and 0.032 at 300k. Cutting whole runs at half
+the play time instead does not test follow-up, because the hard levels are reached late in a run: on the seven
+121-minute runs q is 0.015 at half time and 0.048 at full time (held-out games: 0.054 and 0.118). Treating attempts as
+independent, the profile likelihood gives q 0.020 to 0.055 (90%) on all 25 games, and q = 0 costs 4.28 log-likelihood
+units, in line with the rivals of Section 4.3; the game bootstrap is wider because walls recur in the same games.
+Fitted on the four controls alone, the bootstrap caps span 55% to 100% (all 25 games) and 28% to 100% (held-out).
 
 **Inside the walls (Section 4.3).** This check is exploratory, written after outside reviewers asked what the walls are,
 and it uses the action logs only, because the agent's own notes are not in our data. For each of the 9 likely walls we
@@ -32,9 +45,20 @@ play at once; a game hands back its slot whenever its context is trimmed and the
 priority, and its own priority falls with the tokens and actions spent on its current level (Appendix C). The shelved
 games had spent 56k to 132k tokens on level 1 (median 77k) and did not play again; 7 of them stopped by minute 20. In V5
 all 6 of these games cleared level 1, after 40k to 350k tokens. A game's first crack therefore races the slot rule's
-patience as well as the clock, and that patience can run out early in the run. A sealed one-run test that protects
-games on level 1 from shelving passed (V11, Section 4.4): 1 of the 23 games that started ended with 0 levels, but 2
-games never started.
+patience as well as the clock, and that patience can run out early in the run. A sealed one-run test of a guard that
+protects games on level 1 from shelving was inconclusive (V11, Section 4.4): by the letter it passed, with 1 of the 23
+games that started ending with 0 levels, but 2 games never started.
+
+**Does the slot rule make the noise or move it? (Section 4.3; exploratory, added 7 Nov 2026.)**
+analysis/s37/noise_breakdown_7nov.py plays 400 H2 worlds (Section 3.4), seven runs each, through five schedulers on the
+same random numbers and the harness settings of the simulation in Appendix D: equal sharing of the tokens with no queue,
+taking turns at each context trim, the slot rule (Appendix C) with every waiting game started first, the slot rule, and
+the slot rule with the V11 guard. In that order the run SDs of the level total are 5.5, 5.5, 6.0, 5.8 and 5.6 (observed
+5.3, or 6.0 with the seventh run); the split between 0 levels and at least one carries 7%, 8%, 36%, 39% and 20% of the
+summed per-game variance (observed 49%); and zero-level games per run are 1.74, 1.77, 3.34, 3.14 and 2.13 (observed
+2.43). Along this chain the crack waits carry 90% of the slot rule's run variance (85% to 95%), taking turns -1%,
+shelving 18% (14% to 23%) and late starts -7%. The slot rule clears 1.29 levels per run more than equal sharing and 2.17
+more than taking turns; starting every game first adds 1.02, and the guard costs 1.36 (SEs 0.11 to 0.21).
 
 **How many runs it takes to see a real change (Section 4.6).** On the leaderboard one submission has an SD of 2.87 points. To detect a true difference with power 0.8 (two-sided test at
 0.05) takes 15 submissions per arm for a gain of 3 points and 6 for a gain of 5; one run per arm resolves only 11.4 points.
@@ -46,12 +70,15 @@ Resubmission alone buys points: the best of n identical submissions beats their 
 
 In development runs, the two numbers of Section 3.5 help. A 10% change in crack efficiency moves a run's level total by
 4.4 levels and its crack cost b by 0.095. On the 6 valid same-agent runs, b has an A/A SD of 0.051 and the level total an
-SD of 5.3, so a b comparison needs 4.5 runs per arm against 22.6 for raw level totals, 5.1 times fewer. The factor rests
+SD of 5.3, so a b comparison needs 4.5 runs per arm against 22.6 for raw level totals, 5.1 times fewer (from the unrounded values). The factor rests
 on six runs and is fragile: leaving out one run at a time gives 2.8 to 65.1 times, so we claim only that b needs several
-times fewer runs, at least about 2.8. On the 8 valid variant runs, the two numbers predict the level difference from the
+times fewer runs, at least about 2.8. On the five true controls (the four controls and T1c, without spec2;
+analysis/s37/aa_five_controls_7nov.py) the level SD is 6.27 and the b SD 0.035, which gives 31.9 against 2.1 runs per
+arm, 15.0 times fewer (4.9 to 82.4 leaving one out), so the six-run factor is the cautious one. On the 8 valid variant runs, the two numbers predict the level difference from the
 control with r = 0.68. A CPU notebook (paper/notebook/how_many_runs.ipynb in our repository) computes these run counts,
-fits b for two arms from run logs (with our B1 and B12 runs as the example) and repeats the fit-half, predict-half check
-of Section 4.2 on a user's own runs.
+fits b for two arms from run logs (with our B1 and B12 runs as the example) repeats the fit-half, predict-half check
+of Section 4.2 on a user's own runs and gives the cap that permanent walls would set at the fitted q (section 9; it reproduces
+the caps of Section 4.3 from the level counts alone, with a bootstrap over games).
 
 **Methods the model rules out (Section 4.7).** We simulated schedulers under the fitted model before spending GPU time on them. Giving the 10 streams to the games with
 the highest current crack hazard gains +0.0% over equal sharing when games are alike, and -3.6% when their difficulty

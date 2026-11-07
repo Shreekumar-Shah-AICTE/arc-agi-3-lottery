@@ -1,0 +1,66 @@
+(1) in-sample fit; AIC = 2k - 2 loglik, BIC = k ln n - 2 loglik; dAIC and dBIC against the crack model (lognormal + walls)
+  4 controls (sealed fit data): 480 attempts (411 clears)
+    lognormal + walls        loglik   -4769.4  dAIC   +0.0  dBIC   +0.0  q 0.055 scale 22.7k s 1.07
+    lognormal, q = 0         loglik   -4773.0  dAIC   +5.3  dBIC   +1.1  q 0.000 scale 25.7k s 1.17
+    loglogistic + walls      loglik   -4774.7  dAIC  +10.5  dBIC  +10.5  q 0.043 scale 23.3k s 0.64
+    loglogistic, q = 0       loglik   -4777.0  dAIC  +13.2  dBIC   +9.0  q 0.000 scale 25.3k s 0.69
+    weibull + walls          loglik   -4783.5  dAIC  +28.2  dBIC  +28.2  q 0.094 scale 33.2k k 1.14
+    lomax + walls            loglik   -4788.4  dAIC  +37.9  dBIC  +37.9  q 0.081 scale 1800073820002.4k a 54144570757.13
+    lomax, q = 0             loglik   -4795.2  dAIC  +49.6  dBIC  +45.5  q 0.000 scale 91.7k a 2.74
+    weibull, q = 0           loglik   -4807.5  dAIC  +74.3  dBIC  +70.1  q 0.000 scale 43.7k k 0.94
+  7 runs at 121 min: 848 attempts (727 clears)
+    lognormal + walls        loglik   -8425.3  dAIC   +0.0  dBIC   +0.0  q 0.048 scale 23.0k s 1.07
+    lognormal, q = 0         loglik   -8430.0  dAIC   +7.5  dBIC   +2.7  q 0.000 scale 25.6k s 1.15
+    loglogistic + walls      loglik   -8432.5  dAIC  +14.5  dBIC  +14.5  q 0.038 scale 23.5k s 0.63
+    loglogistic, q = 0       loglik   -8435.7  dAIC  +18.8  dBIC  +14.0  q 0.000 scale 25.2k s 0.67
+    weibull + walls          loglik   -8451.5  dAIC  +52.5  dBIC  +52.5  q 0.088 scale 33.4k k 1.15
+    lomax + walls            loglik   -8460.7  dAIC  +70.9  dBIC  +70.9  q 0.074 scale 2790621200692.7k a 83205534781.03
+    lomax, q = 0             loglik   -8470.3  dAIC  +88.1  dBIC  +83.4  q 0.000 scale 105.4k a 3.12
+    weibull, q = 0           loglik   -8488.3  dAIC +124.1  dBIC +119.4  q 0.000 scale 43.0k k 0.96
+  7 runs + V5: 1003 attempts (868 clears)
+    lognormal + walls        loglik  -10104.6  dAIC   +0.0  dBIC   +0.0  q 0.038 scale 24.3k s 1.09
+    lognormal, q = 0         loglik  -10108.9  dAIC   +6.6  dBIC   +1.6  q 0.000 scale 26.5k s 1.17
+    loglogistic + walls      loglik  -10113.1  dAIC  +17.0  dBIC  +17.0  q 0.030 scale 24.6k s 0.65
+    loglogistic, q = 0       loglik  -10115.7  dAIC  +20.3  dBIC  +15.3  q 0.000 scale 26.0k s 0.68
+    lomax + walls            loglik  -10151.8  dAIC  +94.5  dBIC  +94.5  q 0.048 scale 219.7k a 6.46
+    weibull + walls          loglik  -10154.2  dAIC  +99.1  dBIC  +99.1  q 0.070 scale 36.7k k 1.06
+    lomax, q = 0             loglik  -10156.5  dAIC +101.8  dBIC  +96.9  q 0.000 scale 95.1k a 2.77
+    weibull, q = 0           loglik  -10185.2  dAIC +159.1  dBIC +154.2  q 0.000 scale 45.2k k 0.93
+
+(2) fitted on the 7 runs at 121 min, scored on the doubled run V5
+  V5: 155 attempts (141 clears); clears past 150k tokens 6 of 12 attempts that got there
+    lognormal + walls        V5 loglik  -1680.3  clears past 150k expected  3.8; all clears expected 163.0
+    lognormal, q = 0         V5 loglik  -1679.4  clears past 150k expected 10.6; all clears expected 173.8
+    loglogistic + walls      V5 loglik  -1681.2  clears past 150k expected  3.9; all clears expected 163.5
+    loglogistic, q = 0       V5 loglik  -1680.5  clears past 150k expected  7.9; all clears expected 172.9
+    weibull + walls          V5 loglik  -1711.6  clears past 150k expected  0.4; all clears expected 157.4
+    weibull, q = 0           V5 loglik  -1699.1  clears past 150k expected 24.0; all clears expected 192.2
+    lomax + walls            V5 loglik  -1698.3  clears past 150k expected  1.4; all clears expected 160.7
+    lomax, q = 0             V5 loglik  -1686.9  clears past 150k expected 11.4; all clears expected 173.1
+  V5 loglik relative to the crack model: lognormal + walls +0.0; lognormal, q = 0 +0.8; loglogistic + walls -1.0; loglogistic, q = 0 -0.2; weibull + walls -31.3; weibull, q = 0 -18.8; lomax + walls -18.0; lomax, q = 0 -6.6
+
+(3) leave one game out (7 runs + V5): summed held-out log-likelihood of each game's attempts, relative to the crack model
+    loglogistic, q = 0       held-out loglik  -10144.6  (+3.4)
+    lognormal, q = 0         held-out loglik  -10144.7  (+3.4)
+    loglogistic + walls      held-out loglik  -10147.3  (+0.7)
+    lognormal + walls        held-out loglik  -10148.0  (+0.0)
+    lomax + walls            held-out loglik  -10171.6  (-23.6)
+    lomax, q = 0             held-out loglik  -10175.2  (-27.2)
+    weibull + walls          held-out loglik  -10179.4  (-31.4)
+    weibull, q = 0           held-out loglik  -10208.3  (-60.2)
+
+(4) the sealed V5 calculation with each model fitted on the 4 controls (1,000 continuations per control run)
+    lognormal + walls        2x total levels  128.9 (model-only 5-95% 115-142); observed 141, sealed 127
+    lognormal, q = 0         2x total levels  145.7 (model-only 5-95% 135-156); observed 141, sealed 127
+    loglogistic + walls      2x total levels  129.8 (model-only 5-95% 116-143); observed 141, sealed 127
+    loglogistic, q = 0       2x total levels  142.0 (model-only 5-95% 130-154); observed 141, sealed 127
+    weibull + walls          2x total levels  117.4 (model-only 5-95% 104-130); observed 141, sealed 127
+    weibull, q = 0           2x total levels  153.4 (model-only 5-95% 145-162); observed 141, sealed 127
+    lomax + walls            2x total levels  121.9 (model-only 5-95% 107-135); observed 141, sealed 127
+    lomax, q = 0             2x total levels  145.8 (model-only 5-95% 135-156); observed 141, sealed 127
+
+(5) where the two readings part: the same continuation with three more 121-minute budgets (four times the play time; stream redistribution as in the seal), each model fitted on the 4 controls
+    lognormal + walls        4x total levels  141.2 (model-only 5-95% 124-158) of 183
+    lognormal, q = 0         4x total levels  172.3 (model-only 5-95% 162-181) of 183
+    loglogistic + walls      4x total levels  144.5 (model-only 5-95% 128-162) of 183
+    loglogistic, q = 0       4x total levels  168.0 (model-only 5-95% 156-179) of 183

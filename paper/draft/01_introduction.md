@@ -10,7 +10,7 @@ paper raises the chance of anyone reaching 85% on ARC-AGI [ARCPaper26]; on ARC-A
 [ARC3Kaggle]. Progress toward either line is read off leaderboards, so whatever moves a leaderboard decides what the field learns.
 
 Our question started with a resubmission. We submitted the same notebook, byte for byte, five times to the ARC-AGI-3
-Kaggle leaderboard. It scored 33.37, 29.69, 28.24, 26.76 and 26.21 (SD 2.87). On the final public board of 5,073 teams,
+Kaggle leaderboard. It scored 33.37, 29.69, 28.24, 26.76 and 26.21 (SD 2.87). On the final public board of 5,073 teams (the 2 Nov close as fetched on 4 Nov),
 those five draws place 197th, 1,096th, 1,503rd, 1,836th and 1,920th (Fig. 1; ties counted against us). Over the following weeks we ran dozens of
 experiments on the agent. Thirty-two ended as killed, noise, failed, parked or invalid (Appendix A), and nothing we tried
 after this notebook beat its run-to-run noise (with one leaderboard draw per arm, a gain needs about 11.4 points to be
@@ -27,22 +27,23 @@ tests: a model of where an LLM agent's leaderboard noise comes from, checked by 
 data existed, two of them for private leaderboards that are not yet published.
 
 Contributions:
-1. A mechanism (Section 3): the crack model and its link to the official score, with checks against held-out budgets and
-   against other teams' runs.
+1. A mechanism (Section 3): the crack model and its link to the official score, with checks against held-out budgets,
+   against other teams' runs and against rival waiting-time models without walls, which the data do not yet rule out (Section 4.3).
 2. The cause of the noise (Section 4.3): luck in which near-the-edge levels a run clears before its budget ends, on top of
    level difficulty and walls that do not change between runs. About half of the per-game noise is whether a game clears
-   its first level before the harness's slot rule shelves it.
+   its first level before the harness's slot rule shelves it; in simulation that rule moves noise onto first levels
+   rather than adding it (the crack waits alone carry 90% of the run-to-run variance).
 3. Sealed predictions (Section 4.4): for the private ARC-AGI-3 and ARC-AGI-2 leaderboards (pending until the hosts
    publish them); for doubling the play time (141 levels against 127 predicted: inside the 90% interval but near its top;
    in a simulation made after the result, about half of the excess comes from an endgame rule in the harness that shaped
    the control runs the sealed calculation continued); for a cut in token supply (unscored, because both slower runs left
-   games unplayed); and for a guard that keeps games on level 1 from being shelved (passed in one partial run: 1
+   games unplayed); and for a guard that keeps games on level 1 from being shelved (inconclusive: by the letter it passed in one partial run, with 1
    zero-level game among the 23 that started, against 1 to 4 in seven reference runs, but 2 games never started).
 4. Tools for anyone comparing agents (Sections 4.5-4.6): two numbers per agent that needed about 5 times fewer runs than
    raw level totals on our data (at least 2.8 times), run counts for leaderboard comparisons, and our 32 negative results
    sorted by what each change did to the run.
 5. A similar pattern on ARC-AGI-2 (Section 4.8): 2,133 teams share a plateau whose mean score rises with their number of
-   entries; best of n draws of one notebook lineage accounts for about 70% of the rise, run luck alone for about half.
+   entries; run luck of unchanged code alone accounts for about half of the rise (52%; 70% with the SD of all seven of our draws, which pools two notebooks).
    On the 120 public SWE-Bench-Verified runs of Bjarnason et al., per-task luck likewise accounts for the run-to-run noise
    (86% pooled; exploratory).
 

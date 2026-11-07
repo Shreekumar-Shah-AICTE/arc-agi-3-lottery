@@ -8,7 +8,7 @@
 Table 1 lists all 17 of our ARC-AGI-3 submissions. The linked notebook, arc3-b12-x6dprime (public), is B12. Its first
 submission scored 33.37, our best, which places 197th of 5,073 on the final public board. Four byte-identical
 resubmissions scored 29.69, 28.24, 26.76 and 26.21 (mean of the five 28.85). The seven later submissions of the B12 harness (six
-variants, B30 twice), whether they changed the agent or only its start-up handling, scored 23.82 to 29.88 (mean 25.89); none beat B12. Nor can we show that B12 beats
+variants, B30 twice), whether they changed the agent or only its start-up handling, scored 23.82 to 29.88 (mean 25.89); none beat B12. A date trend does not explain the lower mean (exploratory, after the 7 November reviews): over B12 and its seven later submissions the slope is -0.07 points a day (SE 0.08), and the later submissions' shift, -2.25 (SE 1.67), is itself within the noise. The five B12 draws alone fall 0.46 points a day (SE 0.36, p = 0.29), and 0.11 without the first draw. Nor can we show that B12 beats
 the notebook it started from. dfranzen's Milestone 2 notebook (B1), submitted twice, scored 28.30 and 26.72 (mean 27.51).
 B12's five draws are 1.34 points higher on average, with a standard error of 2.40 at the per-submission SD of 2.87
 (z = 0.56, p = 0.58); detecting a true gain of that size with power 0.8 would take about 72 submissions per arm. Our own method (Section
@@ -29,7 +29,7 @@ that run's level total within 1.3 levels (Section 4.8). The fitted curve matches
 time: at 62k tokens the observed share of attempts still open is 0.220 against 0.213 from the model (Fig. 2).
 
 ### 4.5 Our 32 negative results, sorted by what each change did
-We sorted the negative results after the fact by what each change did to the run. The sorting describes them; it does
+The 32 rows are 17 distinct changes to the ARC-AGI-3 agent or its serving, run on the GPU, plus 6 ARC-AGI-2 rows, 5 simulations on CPU, 2 identical reruns and 2 second readouts of a change already listed (Appendix A, column Kind). We sorted the negative results after the fact by what each change did to the run. The sorting describes them; it does
 not test the model.
 - Fewer tokens for the levels that count. Rolling memory summaries cut prefix-cache hits from 94% to 69% and agent turns
   by 29%, so the same budget bought fewer attempts. ThinkingCap, a variant of our language model tuned to think less,
@@ -37,6 +37,7 @@ not test the model.
 - Higher crack cost. Low reasoning effort halved the level count.
 - No change to cracking. More concurrent streams and shallower speculative decoding (one or two draft steps instead of three; both in Appendix A) changed serving, not
   what the agent does; a scene-digest tool was never called (0 of 541 calls).
+
 On the 14 valid FB25 runs with token logs, crack costs b range from -0.150 to +0.060, against an A/A SD of 0.051. None
 of the 6 variants with valid runs passes a multiple-comparison line (Bonferroni over the 6 variants, |z| of 2.64 or more); ThinkingCap's cheaper
 cracks come closest and reach the line only after rounding (one run). Next is the ht harness (mean b -0.095 over two runs, z 2.2), the one
@@ -47,6 +48,12 @@ six same-agent runs sit within 0.4 standard errors of the control, but b32_spec2
 other five spread only 0.015, and 5 of the 6 variants would cross the line. A level bootstrap of the same fit (400 refits,
 analysis/s37/aa_bootstrap_b.py) sides with the six-run SD: it puts the standard error of a one-run variant's b at 0.057 to
 0.072, b32_spec2_r3 at z -1.97, and none of the 6 variants past the line (largest |z| 2.09 for ThinkingCap, then 2.01 for ht).
-The tight cluster of the other five runs is the unusual part, so 'none passes' stands, but with six A/A runs the line is soft. Two runs do not fit the two numbers. ThinkingCap's cost per level fell
+The tight cluster of the other five runs is the unusual part. The 7 Nov reviews asked for the check on true controls
+only. Refitted with T1c, a fifth run of the unchanged control made on 4 Nov (Appendix D), and without spec2
+(analysis/s37/aa_five_controls_7nov.py), the A/A SD of b is 0.035 (90% interval 0.023 to 0.083): T1c's b sits 0.074
+below the other four controls, and independent attempts would spread about 0.050. At 0.035, with spec2 tested as a
+seventh variant (Bonferroni |z| of 2.69 or more), ThinkingCap (z -3.5) and ht (z -2.8) cross the line and spec2
+(z -1.2) does not. So 'none passes' holds at the six-run SD and in the bootstrap but not on the five true controls,
+and with five or six A/A runs the line is soft. Two runs do not fit the two numbers. ThinkingCap's cost per level fell
 (b -0.150) but it cleared 13.1 levels fewer than predicted, which in the model means more walls. B15C generated 23% more
 tokens (5.45M) and still cleared 6.9 levels fewer than predicted: more supply did not turn into more cracks.

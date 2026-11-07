@@ -1,0 +1,4 @@
+N0: mean total  101.5 (between worlds SD  1.9); run-to-run SD within a world: mean 11.1, 10-90%  9.3-12.7
+N1: mean total  101.2 (between worlds SD 10.2); run-to-run SD within a world: mean  6.0, 10-90%  4.9- 7.1
+(between-level SD in N1: 1.06; crack model for comparison, lever3d_noise_model.out: H0 12.3, H1 11.1, H2 5.6)
+observed: mean 102.5, run-to-run SD 5.3 (six runs; 6.0 with T1c)

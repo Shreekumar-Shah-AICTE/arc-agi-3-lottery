@@ -1,0 +1,55 @@
+85% needs q <= 0.031 on the 25 public level counts and q <= 0.031 on the 15 held-out games (exact cap form)
+
+(1) follow-up refits (crack model, Nelder-Mead MLE); cut = share of the 121-minute play time; cap = unlimited-play cap
+ all 25 games (cap on the 25 public level counts)
+  4 controls cut at 0.25                       attempts  221 (open 100); longest wait seen   108k; q 0.075 median  22.0k s 0.77; cap 67.5%
+  4 controls cut at 0.5                        attempts  353 (open  93); longest wait seen   141k; q 0.021 median  20.6k s 1.04; cap 89.6%
+  4 controls cut at 0.75                       attempts  441 (open  88); longest wait seen   233k; q 0.036 median  21.3k s 1.06; cap 82.9%
+  4 controls cut at 1                          attempts  480 (open  69); longest wait seen   277k; q 0.055 median  22.7k s 1.07; cap 75.1%
+  7 runs at 121 min cut at 0.25                attempts  380 (open 175); longest wait seen   108k; q 0.072 median  22.0k s 0.80; cap 68.7%
+  7 runs at 121 min cut at 0.5                 attempts  618 (open 166); longest wait seen   158k; q 0.015 median  20.8k s 1.04; cap 92.6%
+  7 runs at 121 min cut at 0.75                attempts  778 (open 156); longest wait seen   233k; q 0.016 median  22.3k s 1.06; cap 91.9%
+  7 runs at 121 min cut at 1                   attempts  848 (open 121); longest wait seen   277k; q 0.048 median  23.0k s 1.07; cap 77.9%
+  V5 alone cut at 0.5                          attempts   93 (open  23); longest wait seen   114k; q 0.045 median  18.5k s 0.98; cap 78.9%
+  V5 alone cut at 1                            attempts  127 (open  22); longest wait seen   223k; q 0.008 median  24.6k s 1.09; cap 96.0%
+  V5 alone cut at 1.5                          attempts  145 (open  21); longest wait seen   346k; q 0.022 median  27.0k s 1.11; cap 89.3%
+  V5 alone cut at 2                            attempts  155 (open  14); longest wait seen   350k; q 0.016 median  30.5k s 1.18; cap 91.8%
+  7 runs + V5, V5 cut at 1                     attempts  975 (open 143); longest wait seen   277k; q 0.042 median  23.2k s 1.07; cap 80.4%
+  7 runs + V5, V5 cut at 2                     attempts 1003 (open 135); longest wait seen   350k; q 0.038 median  24.3k s 1.09; cap 82.2%
+ 15 held-out games (cap on the 15 held-out games)
+  4 controls cut at 0.5                        attempts  144 (open  57); longest wait seen   141k; q 0.027 median  36.0k s 1.03; cap 86.6%
+  4 controls cut at 1                          attempts  209 (open  56); longest wait seen   277k; q 0.123 median  35.1k s 1.03; cap 52.0%
+  7 runs at 121 min cut at 0.5                 attempts  255 (open 102); longest wait seen   158k; q 0.054 median  34.8k s 0.89; cap 75.1%
+  7 runs at 121 min cut at 1                   attempts  373 (open  98); longest wait seen   277k; q 0.118 median  35.5k s 0.98; cap 53.4%
+  V5 alone cut at 1                            attempts   63 (open  14); longest wait seen   223k; q 0.000 median  41.8k s 0.99; cap 100.0%
+  V5 alone cut at 2                            attempts   84 (open  13); longest wait seen   350k; q 0.026 median  50.1k s 1.09; cap 87.0%
+  7 runs + V5, V5 cut at 1                     attempts  436 (open 112); longest wait seen   277k; q 0.094 median  37.0k s 0.99; cap 60.8%
+  7 runs + V5, V5 cut at 2                     attempts  457 (open 111); longest wait seen   350k; q 0.080 median  39.5k s 1.03; cap 65.4%
+
+(2) game bootstrap, 1,000 resamples of games (all their attempts in all runs); 90% intervals are the 5th to 95th percentiles
+  pooled fit, 4 controls     q 0.055 (90% 0.000 to 0.114); cap 75.1% (90% 54.93 to 100.00); q <= 0.031 (85% reachable) in 21% of resamples; games 25
+  pooled fit, 7 runs + V5    q 0.038 (90% 0.003 to 0.075); cap 82.2% (90% 67.25 to 98.46); q <= 0.031 (85% reachable) in 34% of resamples; games 25
+  held-out fit, 4 controls   q 0.123 (90% 0.000 to 0.240); cap 52.0% (90% 27.54 to 100.00); q <= 0.031 (85% reachable) in 11% of resamples; games 15
+  held-out fit, 7 runs + V5  q 0.080 (90% 0.017 to 0.138); cap 65.4% (90% 48.00 to 91.47); q <= 0.031 (85% reachable) in 10% of resamples; games 15
+
+(3) follow-up per attempt: the 7 runs + V5 with every attempt censored at a token cap c (same attempts each time)
+ all 25 games (cap on the 25 public level counts)
+  censored at   50k: clears  720 of 1003; q 0.005 median  25.3k s 1.11; cap 97.2%
+  censored at  100k: clears  836 of 1003; q 0.049 median  23.6k s 1.07; cap 77.2%
+  censored at  150k: clears  861 of 1003; q 0.046 median  23.8k s 1.08; cap 78.6%
+  censored at  200k: clears  863 of 1003; q 0.052 median  23.5k s 1.07; cap 76.0%
+  censored at  250k: clears  866 of 1003; q 0.045 median  23.9k s 1.08; cap 78.9%
+  censored at  300k: clears  867 of 1003; q 0.042 median  24.0k s 1.09; cap 80.2%
+  censored at  none: clears  868 of 1003; q 0.038 median  24.3k s 1.09; cap 82.2%
+  Kaplan-Meier survival of attempts (still at risk): 50k 0.273 (260); 100k 0.135 (83); 150k 0.088 (26); 200k 0.076 (10); 250k 0.048 (5); 300k 0.032 (2)
+  profile likelihood for q: best 0.038; 90% likelihood-ratio interval about 0.020 to 0.055 (attempts treated as independent); log-likelihood at q 0: -4.28
+ 15 held-out games (cap on the 15 held-out games)
+  censored at   50k: clears  253 of 457; q 0.038 median  40.3k s 1.00; cap 81.8%
+  censored at  100k: clears  321 of 457; q 0.139 median  35.2k s 0.95; cap 47.7%
+  censored at  150k: clears  339 of 457; q 0.119 median  36.4k s 0.97; cap 53.1%
+  censored at  200k: clears  341 of 457; q 0.126 median  35.9k s 0.96; cap 51.0%
+  censored at  250k: clears  344 of 457; q 0.104 median  37.6k s 0.99; cap 57.6%
+  censored at  300k: clears  345 of 457; q 0.094 median  38.3k s 1.01; cap 60.6%
+  censored at  none: clears  346 of 457; q 0.080 median  39.5k s 1.03; cap 65.4%
+  Kaplan-Meier survival of attempts (still at risk): 50k 0.437 (189); 100k 0.257 (71); 150k 0.181 (24); 200k 0.157 (10); 250k 0.098 (5); 300k 0.065 (2)
+  profile likelihood for q: best 0.080; 90% likelihood-ratio interval about 0.030 to 0.130 (attempts treated as independent); log-likelihood at q 0: -2.77

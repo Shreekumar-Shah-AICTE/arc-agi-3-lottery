@@ -8,8 +8,9 @@
 ARC-AGI-3 on Kaggle hides 110 games. Half of them set the public leaderboard and half the private one. A submission
 runs on one RTX Pro 6000 GPU within a 9-hour limit. Our agent starts from dfranzen's public Milestone 2 notebook, which is
 built on Tufa Labs' Duck harness (Jeroen Cottaar). We added a ledger of solved levels: the rule the model wrote for each
-solved level stays in the prompt for the whole game, even after older history is dropped (X6). In a simple form it resembles the skill library of Voyager [Wang23] and
-the stored self-reflections of Reflexion [Shinn23]. We also took the
+solved level stays in the prompt for the whole game, even after older history is dropped (X6). In a simple form it resembles the skill library of Voyager [Wang23], the
+stored self-reflections of Reflexion [Shinn23], and the insights and workflows that ExpeL [Zhao24] and Agent Workflow
+Memory [Wang24] keep from past tasks. We also took the
 slot-priority formula from shiiin9's public notebook (Form D1), which decides which games get the 10 generation streams
 and favours games that have reached later levels (D'). Together they make the B12 notebook. The language model is
 Qwen3.8-Flash-Next (4-bit weights) with a multi-token-prediction draft model, served by SGLang with 10 parallel streams.
@@ -66,11 +67,14 @@ is in how many near-the-edge levels a run happens to clear before its budget end
 
 ### 3.5 Two numbers per agent
 To compare two agents we fit, on the same levels, log T(run r, level l) = a_l + b_r + e with e ~ Normal(0, s^2) and the
-open attempts censored (a lognormal accelerated-failure-time model with level effects, fitted by EM; s = 0.55). Each run
+open attempts censored (a lognormal accelerated-failure-time model with level effects [KalbfleischPrentice80], fitted by EM [Dempster77]; s = 0.55). Each run
 then has a crack cost b_r, the log multiplier of tokens needed per level relative to the control, and a token supply
 S_r, the tokens it generated. Their combination m_r = (S_r / S_ctl) exp(-b_r) is an effective budget, which we convert to
 levels with the control's own budget curve. Because a_l absorbs the level's difficulty, b is far less noisy than a
-level count: its per-run standard error is 0.06-0.07.
+level count: its per-run standard error is 0.06-0.07. In Chollet's terms [Chollet19], b is a compute-side measure of
+skill-acquisition efficiency: how many generated tokens the agent needs to acquire each level's skill, compared on the
+same levels so that their own difficulty cancels (ARC-AGI-3's score counts actions instead [ARC3]). A wall is a skill the
+agent does not acquire within any budget we can afford.
 
 ### 3.6 Sealed predictions
 Each prediction was written as a text file with its decision rule, hashed with SHA-256, time-stamped with OpenTimestamps

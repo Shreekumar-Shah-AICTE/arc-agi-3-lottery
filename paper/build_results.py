@@ -564,5 +564,108 @@ _SW = 'analysis/s38/out/swe_pertask_luck.json'; _sw = json.load(open(R / _SW))['
 for _k in ('configs', 'runs', 'share', 'share_min', 'share_max', 'sd_obs_min', 'sd_obs_max', 'sometimes_min', 'sometimes_max', 'never_min', 'never_max'):
     put(f'swe_{_k}', _sw[_k], _SW)
 put('swe_null90_lo', _sw['null90'][0], _SW); put('swe_null90_hi', _sw['null90'][1], _SW); put('swe_tasks', 500, _SW); put('swe_runs_per_config', 10, _SW); put('swe_null_draws', 4000, 'analysis/s38/swe_pertask_luck.py (parametric bootstrap draws)')
+# 7 Nov 2026 (exploratory, after the 7 Nov outside reviews): drift, V5 against its log-linear alternative, kinds of the negatives.
+RC = O + 'review_checks_7nov.out'
+for k, g in (('drift_b12_slope', 1), ('drift_b12_se', 2), ('drift_b12_p', 3), ('drift_b12_slope_wo1', 4)):
+    add(k, RC, r'drift B12 draws n 5 slope -([\d.]+) points per day se ([\d.]+) p ([\d.]+); without the first draw slope -([\d.]+)', g)
+for k, g in (('drift_fam_n', 1), ('drift_fam_slope', 2), ('drift_fam_se', 3), ('drift_fam_p', 4), ('drift_var_eff', 5), ('drift_var_se', 6), ('drift_var_p', 7)):
+    add(k, RC, r'drift B12 and variants n (\d+) slope -([\d.]+) points per day se ([\d.]+) p ([\d.]+); variant effect -([\d.]+) se ([\d.]+) p ([\d.]+)', g)
+for k, g in (('postb12_var_n', 1), ('postb12_var_mean', 2)):
+    add(k, RC, r'post-B12 variants n (\d+) mean ([\d.]+)', g)
+add('v5_lr_loglin', RC, r'v5 likelihood ratio log-linear over crack model ([\d.]+)')
+add('v5_lr_sd', RC, r'\(sd ([\d.]+) from the sealed 90% interval\)')
+for k, lab in (('neg_gpu', 'GPU_change'), ('neg_arc2', 'ARC-AGI-2'), ('neg_cpu', 'CPU_only'), ('neg_rerun', 'rerun'), ('neg_readout', 'readout')):
+    add(k, RC, r'negative rows [^\n]*' + lab + r' (\d+)')
+add('v5_loglin_pred', 'analysis/s37/sealed/v5_budget_prediction.txt', r'B\. Log-linear \(same gain per doubling as 60\.5 -> 121 min, about \+(\d+)\): about (\d+)', 2)
+add('v5_loglin_gain', 'analysis/s37/sealed/v5_budget_prediction.txt', r'B\. Log-linear \(same gain per doubling as 60\.5 -> 121 min, about \+(\d+)\)', 1)
+put('a0_parent_score', 33.89, 'paper/tables/t2_arc2_submissions.md (A0 row: the parent notebook\'s public score on Kaggle)')
+put('perfpatch_family_hi', 32.22, 'our ARC-AGI-2 board check of 9 Oct 2026 (private notes osint6 E13: 3 teams at 33.89, the public family at 30.14 to 32.22)')
+add('v5_half_budget_min', 'analysis/s37/sealed/v5_budget_prediction.txt', r'same gain per doubling as ([\d.]+) -> 121 min')
+# 7 Nov 2026 (exploratory, after the 7 Nov reviews): the A/A check on the five true controls (4 controls + T1c, no spec2).
+A5 = O + 'aa_five_controls_7nov.out'
+for k, g in (('aa5_b_sd', 1), ('aa5_b_sd_lo', 2), ('aa5_b_sd_hi', 3), ('aa5_levels_sd', 4), ('aa5_arm_levels', 5), ('aa5_arm_b', 6), ('aa5_ratio', 7)):
+    add(k, A5, r'5 controls \(with T1c\)\s+5\s+([\d.]+)\s+([\d.]+) to ([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)x', g)
+add('aa5_t1c_b', A5, r't1c_fb25_ctl\s+b -([\d.]+)')
+add('aa5_indep_sd', A5, r'= ([\d.]+); the chance that 5')
+add('aa5_n_variants', A5, r'(\d+) variants incl\. spec2, Bonferroni')
+add('aa5_bonf', A5, r'variants incl\. spec2, Bonferroni \|z\| >= ([\d.]+)')
+for k, g in (('aa5_z_ht', 'ht'), ('aa5_z_tc', 'ThinkingCap'), ('aa5_z_spec2', 'spec2')):
+    add(k, A5, r'variants against the 5 controls[\s\S]*?\n  ' + g + r'\s+runs \d\s+mean b [-+][\d.]+\s+z -([\d.]+)')
+for k, g in (('aa5_loo_lo', 1), ('aa5_loo_hi', 2)):
+    add(k, A5, r'leave-one-out ratio range: ([\d.]+)x to ([\d.]+)x', g)
+# 7 Nov 2026 (exploratory, after the 7 Nov reviews): rival waiting-time models without walls (q = 0), rivals_no_walls_7nov.py.
+RV = O + 'rivals_no_walls_7nov.out'; _rv = open(R / RV, encoding='utf-8').read()
+_s1 = _rv.split('\n(2)')[0]
+_rows = re.findall(r'^\s+(\w+)( \+ walls|, q = 0)\s+loglik\s+(-[\d.]+)\s+dAIC\s+([+-][\d.]+)\s+dBIC\s+([+-][\d.]+)', _s1, re.M)
+assert len(_rows) == 24, len(_rows)
+_sets = [{(k, c.strip()): (float(ll), float(a), float(b)) for k, c, ll, a, b in _rows[i:i + 8]} for i in (0, 8, 16)]
+_loss = [round(st[('lognormal', '+ walls')][0] - st[('lognormal', ', q = 0')][0], 1) for st in _sets]
+put('rv_ll_loss_lo', f'{min(_loss):.1f}', RV); put('rv_ll_loss_hi', f'{max(_loss):.1f}', RV)
+_a = [st[('lognormal', ', q = 0')][1] for st in _sets]; _b = [st[('lognormal', ', q = 0')][2] for st in _sets]
+put('rv_daic_ln0_lo', f'{min(_a):.1f}', RV); put('rv_daic_ln0_hi', f'{max(_a):.1f}', RV); put('rv_dbic_ln0_lo', f'{min(_b):.1f}', RV); put('rv_dbic_ln0_hi', f'{max(_b):.1f}', RV)
+_ll = [v[1] for st in _sets for (k, c), v in st.items() if k == 'loglogistic']; _wl = [v[1] for st in _sets for (k, c), v in st.items() if k in ('weibull', 'lomax')]
+put('rv_daic_ll_lo', f'{min(_ll):.1f}', RV); put('rv_daic_ll_hi', f'{max(_ll):.1f}', RV); put('rv_daic_wl_lo', f'{min(_wl):.1f}', RV); put('rv_daic_wl_hi', f'{max(_wl):.1f}', RV)
+for k, g in (('rv_v5_late_clears', 1), ('rv_v5_late_attempts', 2)):
+    add(k, RV, r'clears past 150k tokens (\d+) of (\d+) attempts that got there', g)
+add('rv_v5_late_exp_walls', RV, r'lognormal \+ walls\s+V5 loglik\s+-[\d.]+\s+clears past 150k expected\s+([\d.]+)')
+add('rv_v5_late_exp_ln0', RV, r'lognormal, q = 0\s+V5 loglik\s+-[\d.]+\s+clears past 150k expected\s+([\d.]+)')
+add('rv_v5_ll_gain_ln0', RV, r'relative to the crack model: [^\n]*lognormal, q = 0 \+([\d.]+)')
+add('rv_cv_gain_ln0', RV, r'lognormal, q = 0\s+held-out loglik\s+-[\d.]+\s+\(\+([\d.]+)\)')
+for k, lab in (('rv_2x_walls', r'lognormal \+ walls'), ('rv_2x_ln0', r'lognormal, q = 0'), ('rv_2x_ll0', r'loglogistic, q = 0')):
+    add(k, RV, lab + r'\s+2x total levels\s+([\d.]+)')
+for k, lab in (('rv_4x_walls', r'lognormal \+ walls'), ('rv_4x_ln0', r'lognormal, q = 0')):
+    add(k, RV, lab + r'\s+4x total levels\s+([\d.]+)')
+for k, g in (('rv_4x_walls_lo', 1), ('rv_4x_walls_hi', 2)):
+    add(k, RV, r'lognormal \+ walls\s+4x total levels\s+[\d.]+ \(model-only 5-95% (\d+)-(\d+)\)', g)
+for k, g in (('rv_4x_ln0_lo', 1), ('rv_4x_ln0_hi', 2)):
+    add(k, RV, r'lognormal, q = 0\s+4x total levels\s+[\d.]+ \(model-only 5-95% (\d+)-(\d+)\)', g)
+# 7 Nov 2026 (exploratory, after the 7 Nov reviews): do the walls settle with more follow-up, and game-bootstrap intervals on the caps (walls_followup_7nov.py).
+WF = O + 'walls_followup_7nov.out'; _wf = open(R / WF, encoding='utf-8').read()
+_w1, _w2, _w3 = _wf.split('\n(1)')[1].split('\n(2)')[0], _wf.split('\n(2)')[1].split('\n(3)')[0], _wf.split('\n(3)')[1]
+_w1a, _w1h = _w1.split('\n 15 held-out games', 1)
+_w3a, _w3h = _w3.split('\n 15 held-out games', 1)
+put('wf_q85', re.search(r'85% needs q <= ([\d.]+) on the 25', _wf).group(1), WF)
+for part, txt in (('all', _w1a), ('hold', _w1h)):
+    for lab, f in (('c4', '4 controls'), ('r7', '7 runs at 121 min')):
+        for cut in ('0.5', '1'):
+            m = re.search(re.escape(f) + r' cut at ' + re.escape(cut) + r'\s+attempts\s+\d+ \(open\s+\d+\); longest wait seen\s+\d+k; q ([\d.]+) median\s+[\d.]+k s [\d.]+; cap ([\d.]+)%', txt)
+            put(f'wf_cut_{part}_{lab}_{cut.replace(".", "")}_q', m.group(1), WF); put(f'wf_cut_{part}_{lab}_{cut.replace(".", "")}_cap', m.group(2), WF)
+for nm, lab in (('all_c4', r'pooled fit, 4 controls'), ('all_r8', r'pooled fit, 7 runs \+ V5'), ('hold_c4', r'held-out fit, 4 controls'), ('hold_r8', r'held-out fit, 7 runs \+ V5')):
+    m = re.search(lab + r'\s+q ([\d.]+) \(90% ([\d.]+) to ([\d.]+)\); cap ([\d.]+)% \(90% ([\d.]+) to ([\d.]+)\); q <= [\d.]+ \(85% reachable\) in (\d+)% of resamples', _w2)
+    for i, k in enumerate(('q', 'q_lo', 'q_hi', 'cap', 'cap_lo', 'cap_hi', 'share85'), 1): put(f'wf_boot_{nm}_{k}', m.group(i), WF)
+for part, txt in (('all', _w3a), ('hold', _w3h)):
+    for c in ('100k', '200k', '300k', 'none'):
+        m = re.search(r'censored at\s+' + c + r': clears\s+(\d+) of (\d+); q ([\d.]+) median\s+([\d.]+)k s ([\d.]+); cap ([\d.]+)%', txt)
+        put(f'wf_cens_{part}_{c}_q', m.group(3), WF); put(f'wf_cens_{part}_{c}_cap', m.group(6), WF)
+    m = re.search(r'200k ([\d.]+) \((\d+)\); 250k ([\d.]+) \((\d+)\); 300k ([\d.]+) \((\d+)\)', txt)
+    put(f'wf_km_{part}_200k', m.group(1), WF); put(f'wf_km_{part}_atrisk_200k', m.group(2), WF); put(f'wf_km_{part}_300k', m.group(5), WF)
+    m = re.search(r'best ([\d.]+); 90% likelihood-ratio interval about ([\d.]+) to ([\d.]+) \(attempts treated as independent\); log-likelihood at q 0: (-[\d.]+)', txt)
+    for i, k in enumerate(('best', 'lo', 'hi', 'q0'), 1): put(f'wf_prof_{part}_{k}', m.group(i), WF)
+# 7 Nov 2026 (exploratory): run-to-run noise in models without walls (noise_no_walls_7nov.py).
+NN = O + 'noise_no_walls_7nov.out'
+for nm in ('N0', 'N1'):
+    for i, k in enumerate(('mean', 'sd', 'sd_lo', 'sd_hi'), 1):
+        add(f'nn_{nm.lower()}_{k}', NN, nm + r': mean total\s+([\d.]+) \(between worlds SD\s+[\d.]+\); run-to-run SD within a world: mean\s+([\d.]+), 10-90%\s+([\d.]+)-\s*([\d.]+)', i)
+add('nn_sb', NN, r'between-level SD in N1: ([\d.]+)')
+# 7 Nov 2026: the X6 ledger as printed in Appendix C (harness patch in the B12 notebook).
+add('x6_rule_chars', 'kaggle/b12_fb25/b12_fb25.ipynb', r'out\)\.split\(\)\)\[:(\d+)\]')
+add('x6_last_actions', 'kaggle/b12_fb25/b12_fb25.ipynb', r'len\(acts\), [^\n]{0,20}acts\[-(\d+):\]')
+# 7 Nov 2026 (exploratory): does the harness's slot rule make the run-to-run noise or move it (noise_breakdown_7nov.py).
+NB7 = O + 'noise_breakdown_7nov.out'
+add('nb_worlds', NB7, r'Noise breakdown: (\d+) H2 worlds x (\d+) runs')
+add('nb_runs', NB7, r'Noise breakdown: (\d+) H2 worlds x (\d+) runs', 2)
+for nm, key in (('PS', 'ps'), ('FIFO', 'fifo'), ("D'+st", 'dst'), ("D'", 'd'), ("D'+g", 'dg')):
+    pat = (r'\n\s+' + re.escape(nm) + r'\s+levels\s+([\d.]+); run SD\s+([\d.]+) \(variance\s+([\d.]+), 90%\s+([\d.]+) to\s+([\d.]+)\); '
+           r'zero-level games ([\d.]+); last start\s+([\d.]+) min; 0/1 split share\s+(\d+)% \(worlds 10-90% (\d+)-(\d+)%\)')
+    for i, k in enumerate(('levels', 'sd', 'var', 'var_lo', 'var_hi', 'zeros', 'last', 'zshare', 'zs_lo', 'zs_hi'), 1):
+        add(f'nb_{key}_{k}', NB7, pat, i)
+for lab, key in ((r'crack waits \(PS\)', 'crack'), (r'turn-taking \(FIFO - PS\)', 'turns'), (r"shelving \(D'\+st - FIFO\)", 'shelve'),
+                 (r"late starts \(D' - D'\+st\)", 'late'), (r"slot rule and queue together \(D' - PS\)", 'rule'),
+                 (r"priorities alone \(D' - FIFO\)", 'prio')):
+    for i, k in enumerate(('share', 'lo', 'hi'), 1):
+        add(f'nb_{key}_{k}', NB7, lab + r'\s+(-?\d+)% \((-?\d+)% to (-?\d+)%\)', i)
+for a, b, key in (("D'", 'PS', 'd_ps'), ("D'", 'FIFO', 'd_fifo'), (r"D'\+st", "D'", 'dst_d'), (r"D'\+g", "D'", 'dg_d')):
+    for i, k in enumerate(('diff', 'se'), 1):
+        add(f'nb_{key}_{k}', NB7, a + ' minus ' + b + r': \+?(-?[\d.]+) levels \(SE ([\d.]+)\)', i)
 json.dump(E, open(R / 'paper' / 'results.json', 'w'), indent=1)
 print(f'{len(E)} numbers ->', R / 'paper' / 'results.json')

@@ -56,12 +56,26 @@ Format: short key, full citation, where verified. Used in "Prior work" (outline 
   Problems." Journal of Automated Reasoning 24:67-100, 2000. doi 10.1023/A:1006314320276 (random restarts eliminate heavy tails).
 - [Luby93] M. Luby, A. Sinclair, D. Zuckerman. "Optimal speedup of Las Vegas algorithms." Information Processing Letters
   47(4):173-180, 1993. doi 10.1016/0020-0190(93)90029-9.
+- [Huberman97] B. A. Huberman, R. M. Lukose, T. Hogg. "An Economics Approach to Hard Computational Problems." Science
+  275(5296):51-54, 1997. doi 10.1126/science.275.5296.51 (checked 7 Nov 2026: algorithm portfolios built from notions of risk).
+- [GomesSelman01] C. P. Gomes, B. Selman. "Algorithm portfolios." Artificial Intelligence 126(1-2):43-62, 2001.
+  doi 10.1016/S0004-3702(00)00081-3 (checked 7 Nov 2026).
+- [Xu08] L. Xu, F. Hutter, H. H. Hoos, K. Leyton-Brown. "SATzilla: Portfolio-based Algorithm Selection for SAT." Journal of
+  Artificial Intelligence Research 32:565-606, 2008. doi 10.1613/jair.2490 (checked 7 Nov 2026: per-instance log-runtime
+  models, with timed-out runs kept as censored lower bounds by the method of Schmee and Hahn).
+- [Gittins79] J. C. Gittins. "Bandit Processes and Dynamic Allocation Indices." Journal of the Royal Statistical Society,
+  Series B 41(2):148-177, 1979 (with discussion). doi 10.1111/j.2517-6161.1979.tb01068.x (checked 7 Nov 2026).
 
 ## Survival analysis and preregistration
 - [Farewell82] V. T. Farewell. "The Use of Mixture Models for the Analysis of Survival Data with Long-Term Survivors."
   Biometrics 38(4):1041-1046, 1982. doi 10.2307/2529885. (Our "wall" share = the cured / never-event fraction.)
 - [BerksonGage52] J. Berkson, R. P. Gage. "Survival curve for cancer patients following treatment." Journal of the American Statistical Association 47(259): 501-515, 1952. doi:10.1080/01621459.1952.10501187
 - [MallerZhou96] R. Maller, X. Zhou. Survival Analysis with Long-Term Survivors. Wiley, Chichester, 1996 (271 pp.).
+- [KalbfleischPrentice80] J. D. Kalbfleisch, R. L. Prentice. The Statistical Analysis of Failure Time Data. Wiley, New York,
+  1980 (2nd ed. 2002, doi 10.1002/9781118032985, checked 7 Nov 2026). Accelerated-failure-time models.
+- [Dempster77] A. P. Dempster, N. M. Laird, D. B. Rubin. "Maximum Likelihood from Incomplete Data via the EM Algorithm."
+  Journal of the Royal Statistical Society, Series B 39(1):1-38, 1977 (with discussion). doi 10.1111/j.2517-6161.1977.tb01600.x
+  (checked 7 Nov 2026).
 - [PreregML20] L. Bertinetto, J. F. Henriques, S. Albanie, M. Paganini, G. Varol (eds.). NeurIPS 2020 Workshop on
   Pre-registration in Machine Learning. PMLR 148, 2021 (proceedings.mlr.press/v148, checked 5 Nov 2026).
 - [Nosek18] B. A. Nosek, C. R. Ebersole, A. C. DeHaven, D. T. Mellor. "The preregistration revolution." PNAS 115(11):2600-2606, 2018.
@@ -103,3 +117,6 @@ Format: short key, full citation, where verified. Used in "Prior work" (outline 
   with Large Language Models." arXiv 2305.16291 (2023; a skill library of programs).
 - [Shinn23] N. Shinn, F. Cassano, A. Gopinath, K. Narasimhan, S. Yao. "Reflexion: Language Agents with Verbal Reinforcement
   Learning." NeurIPS 2023.
+- [Zhao24] A. Zhao, D. Huang, Q. Xu, M. Lin, Y.-J. Liu, G. Huang. "ExpeL: LLM Agents Are Experiential Learners." AAAI 2024,
+  38(17):19632-19642. doi 10.1609/aaai.v38i17.29936; arXiv 2308.10144 (checked 7 Nov 2026).
+- [Wang24] Z. Z. Wang, J. Mao, D. Fried, G. Neubig. "Agent Workflow Memory." arXiv 2409.07429 (2024; checked 7 Nov 2026).

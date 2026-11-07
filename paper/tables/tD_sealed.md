@@ -90,11 +90,10 @@ highest of the seven same-agent runs and raises their SD from 5.3 to 6.0 (the si
 with one change: a game that has started on level 1 gets top slot priority until it clears the level or has spent
 150k tokens on it.
 The sealed rule counts the games that start and end with 0 levels: PASS if at most 1, FAIL if 2 or more. The seven
-reference runs had 1 to 4 (mean 2.43), so with no effect a pass has about a 1 in 7 chance. V11 passed with 1 of the 23
-games that started: tn36, which had spent 161k tokens on level 1, past the guard's limit. All six games with zeros in
+reference runs had 1 to 4 (mean 2.43), so with no effect a pass has about a 1 in 7 chance. By the letter of the rule V11 passed, with 1 of the 23 games that started: tn36, which had spent 161k tokens on level 1, past the guard's limit. All six games with zeros in
 the reference runs cleared level 1, sk48 (a zero in 6 of the 7) included. The run was partial, though: 2 games never
 started (lf52 and su15), which the sealed file reports instead of rerunning; counting them as zeros gives 3. The total,
-103 levels, matches the reference mean (103.9, SD 6.0), with 0.86 of the control tokens. One run is a weak test. In the
+103 levels, matches the reference mean (103.9, SD 6.0), with 0.86 of the control tokens. One partial run is a weak test, so we count V11 as inconclusive (7 November wording; the readout is unchanged). In the
 scheduler simulation above, committed before the readout, the guard cut zero-level games from 3.25 to 2.21 per run and
 raised the games that never start from 0.20 to 0.63. Rerun after the readout at this run's token supply (exploratory),
 the simulation leaves 2 or more games unstarted in 18% of runs without the guard and in 59% with it (9% with the guard

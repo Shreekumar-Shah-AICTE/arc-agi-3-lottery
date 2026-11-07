@@ -9,7 +9,7 @@ md("""# How many runs do you need? Run-to-run noise on ARC-AGI-3
 
 Identical code does not give identical ARC-AGI-3 scores. Five byte-identical submissions of one of our agents scored with
 an SD of **2.87 points** on the public leaderboard, and six runs of one agent on the 25 public games varied by
-**5.3 levels** (SD; mean 102.5 levels). This notebook turns a noise level into six practical answers:
+**5.3 levels** (SD; mean 102.5 levels). This notebook turns a noise level into seven practical answers:
 
 1. how many runs per arm a comparison needs,
 2. how large a difference one run per arm can show,
@@ -17,6 +17,8 @@ an SD of **2.87 points** on the public leaderboard, and six runs of one agent on
 4. how much keeping the best of *n* identical resubmissions lifts a public score,
 5. which of two agents needs fewer tokens per crack on the same levels (section 7, from run logs), and
 6. whether the crack model forecasts your own runs: fit on the first half, predict the second (section 8).
+7. what that fit implies if walls are permanent: the most that unlimited play can reach, with a bootstrap over games
+   (section 9).
 
 The numbers come from our ARC Prize 2026 paper (Shreekumar Shah). Change `SIGMA_LB` and `SIGMA_DEV`, or paste your own
 scores in the last section."""),
@@ -228,6 +230,56 @@ for r in GAMES:
     pred.append(total)
     print(f'{r}: predicted {total:.1f} levels, observed {OBSERVED[r]}')
 print(f'mean: predicted {np.mean(pred):.1f}, observed {np.mean(list(OBSERVED.values())):.2f}')"""),
+md("""## 9. If walls are permanent: the most that unlimited play can reach
+
+If each level is a wall with probability q and walls never crack, a game with L levels clears c levels before its first
+wall, with P(c = j) = (1 - q)^j q for j < L and (1 - q)^L for c = L, whatever the budget. The score weighs level l by l,
+so the game's completion share is c(c + 1) / (L(L + 1)), and the cap is its mean over your games. The table reproduces
+the paper's caps on the 25 public games (73% at q = 0.06, 81% at 0.04; 85% needs 3.1% or less). Below, q is refitted with
+the grid of section 8 on all games and then on games drawn with replacement, which shows how loose the cap is.
+
+Two warnings. The fitted q depends on how long open attempts were followed: on these first halves it is 0.02, since few
+open attempts have run long enough to look like walls; on the full runs the paper finds 0.06, and with longer play it
+falls again (paper, Section 4.3). And the cap holds only if walls are permanent: a lognormal wait without walls fits our
+runs almost as well. Fit your full runs, and read the cap as a model extrapolation, not a measurement."""),
+code("""LEVELS = {name: n for r in GAMES for name, n, _, _ in GAMES[r]}   # level count of each game in the runs above
+def cap(q, levels):   # completion score (percent) that unlimited play reaches if each level is a wall with probability q
+    tot = 0.0
+    for L in levels:
+        j = np.arange(L + 1); p = np.where(j < L, (1 - q) ** j * q, (1 - q) ** L)
+        tot += float((p * j * (j + 1)).sum()) / (L * (L + 1))
+    return 100 * tot / len(levels)
+def q_for(target, levels):                          # largest wall share that still allows `target` percent
+    lo, hi = 0.0, 0.5
+    for _ in range(40):
+        mid = (lo + hi) / 2; lo, hi = (mid, hi) if cap(mid, levels) >= target else (lo, mid)
+    return lo
+L_ALL = list(LEVELS.values())
+print(f'{len(L_ALL)} games, {sum(L_ALL)} levels')
+for qq in (0.0, 0.031, 0.04, 0.06, 0.11):
+    print(f'  q {qq:.3f}: unlimited play reaches at most {cap(qq, L_ALL):.0f}% of the completion score')
+print(f'  85% needs q of {100 * q_for(85, L_ALL):.1f}% or less on these games')
+ATT = {r: {name: att for name, _, att, _ in GAMES[r]} for r in GAMES}
+def fit_q(pairs):                                   # the grid fit of section 8, vectorized, on (run, game) pairs
+    clr = np.array([t for r, g in pairs for t, ok in ATT[r][g] if ok], float)
+    opn = np.array([ATT[r][g][-1][0] for r, g in pairs if ATT[r][g] and not ATT[r][g][-1][1]], float)
+    MU = np.log(np.linspace(5e3, 60e3, 56))[:, None, None]; SS = np.linspace(0.6, 1.8, 25)[None, :, None]
+    Q = np.linspace(0, 0.3, 31)
+    z = (np.log(clr) - MU) / SS
+    base = (-0.5 * z * z - np.log(SS * clr * sqrt(2 * np.pi))).sum(-1)
+    so = 0.5 * ERFC((np.log(np.maximum(opn, 1)) - MU) / (SS * sqrt(2)))
+    ll = base[..., None] + len(clr) * np.log(1 - Q) + np.log(Q + (1 - Q) * so[..., None]).sum(-2)
+    return float(Q[np.unravel_index(np.argmax(ll), ll.shape)[2]])
+names = sorted(LEVELS)
+q_all = fit_q([(r, g) for r in GAMES for g in names if g in ATT[r]])
+print(f'fit on all games again: q {q_all:.2f} (section 8: {q:.2f}); cap {cap(q_all, L_ALL):.0f}%')
+rng = np.random.default_rng(3); bq, bc = [], []
+for _ in range(200):                                # bootstrap over games: resample games, refit q, recompute the cap
+    pick = rng.choice(names, len(names))
+    bq.append(fit_q([(r, g) for g in pick for r in GAMES if g in ATT[r]])); bc.append(cap(bq[-1], [LEVELS[g] for g in pick]))
+bq = np.array(bq)
+print(f'bootstrap over games (200 resamples): q {np.percentile(bq, 5):.2f} to {np.percentile(bq, 95):.2f}, '
+      f'cap {np.percentile(bc, 5):.0f}% to {np.percentile(bc, 95):.0f}% (90% intervals); q at or below 3.1% in {np.mean(bq <= 0.031):.0%}')"""),
 ]
 nb = nbf.v4.new_notebook(); nb.cells = cells
 nb.metadata['kernelspec'] = {'name': 'python3', 'display_name': 'Python 3', 'language': 'python'}

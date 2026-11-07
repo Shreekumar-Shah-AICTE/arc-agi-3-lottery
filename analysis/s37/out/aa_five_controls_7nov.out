@@ -1,0 +1,46 @@
+AFT refit on the 17 FB25 runs plus t1c_fb25_ctl: 2123 attempts (1869 cracked), residual s 0.55 (17-run fit: s 0.55)
+largest change of a 17-run b from adding T1c: 0.0042
+  b12_fb25        b -0.002  levels 106  supply 4.44M  attempts 120
+  b28_ctl_fb25    b +0.013  levels  95  supply 4.39M  attempts 111
+  b32_ctl_r2      b +0.006  levels 103  supply 4.50M  attempts 118
+  b32_ctl_r3      b -0.017  levels 107  supply 4.39M  attempts 123
+  t1c_fb25_ctl    b -0.074  levels 112  supply 4.43M  attempts 127
+  b32_spec2_r2    b +0.017  levels  97  supply 4.27M  attempts 112
+  b32_spec2_r3    b -0.118  levels 107  supply 4.20M  attempts 119
+
+10% efficiency change: +4.4 levels (end slope 46.1) vs 0.095 on the b scale
+cohort                        k  b SD   90% interval    levels SD  runs/arm levels  runs/arm b  ratio
+paper (4 ctl + spec2 B, C)    6  0.051  0.034 to 0.106    5.28        22.6         4.47     5.1x
+4 controls                    4  0.013  0.008 to 0.038    5.44        24.0         0.29    82.4x
+5 controls (with T1c)         5  0.035  0.023 to 0.083    6.27        31.9         2.13    15.0x
+5 controls + spec2 B, C       7  0.051  0.035 to 0.098    6.01        29.3         4.54     6.5x
+
+if attempts were independent given the level, a run's b would have SD about s / sqrt(attempts) = 0.050; the chance that 5 such runs spread 0.035 or less is 0.2566
+
+leave one of the 5 controls out:
+  b12_fb25       : b SD of the other 4 0.040, levels SD  7.18, ratio   15.4x; tested as a variant z +0.38
+  b28_ctl_fb25   : b SD of the other 4 0.036, levels SD  3.74, ratio    4.9x; tested as a variant z +0.84
+  b32_ctl_r2     : b SD of the other 4 0.038, levels SD  7.16, ratio   16.6x; tested as a variant z +0.63
+  b32_ctl_r3     : b SD of the other 4 0.040, levels SD  7.07, ratio   14.3x; tested as a variant z -0.07
+  t1c_fb25_ctl   : b SD of the other 4 0.013, levels SD  5.44, ratio   82.4x; tested as a variant z -5.12
+leave-one-out ratio range: 4.9x to 82.4x
+
+variants against the 4 controls (A/A SD 0.013, control mean +0.000; 7 variants incl. spec2, Bonferroni |z| >= 2.69):
+  ht           runs 2  mean b -0.097  z -8.6
+  sdt          runs 2  mean b -0.014  z -1.3
+  len          runs 1  mean b -0.087  z -6.0
+  x7b          runs 1  mean b +0.060  z +4.1
+  b15c         runs 1  mean b +0.053  z +3.6
+  ThinkingCap  runs 1  mean b -0.150  z -10.3
+  spec2        runs 2  mean b -0.051  z -4.5
+  past the line: 6 of 7 (ht, len, x7b, b15c, ThinkingCap, spec2)
+
+variants against the 5 controls (A/A SD 0.035, control mean -0.015; 7 variants incl. spec2, Bonferroni |z| >= 2.69):
+  ht           runs 2  mean b -0.097  z -2.8
+  sdt          runs 2  mean b -0.014  z +0.0
+  len          runs 1  mean b -0.087  z -1.9
+  x7b          runs 1  mean b +0.060  z +1.9
+  b15c         runs 1  mean b +0.053  z +1.8
+  ThinkingCap  runs 1  mean b -0.150  z -3.5
+  spec2        runs 2  mean b -0.051  z -1.2
+  past the line: 2 of 7 (ht, ThinkingCap)

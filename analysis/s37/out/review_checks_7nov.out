@@ -1,0 +1,5 @@
+drift B12 draws n 5 slope -0.46 points per day se 0.36 p 0.29; without the first draw slope -0.11
+drift B12 and variants n 12 slope -0.07 points per day se 0.08 p 0.43; variant effect -2.25 se 1.67 p 0.21
+post-B12 variants n 7 mean 25.89 vs B12 mean 28.85
+v5 likelihood ratio log-linear over crack model 2.4 (sd 10.6 from the sealed 90% interval)
+negative rows ARC-AGI-2 6 CPU_only 5 GPU_change 17 readout 2 rerun 2 total 32

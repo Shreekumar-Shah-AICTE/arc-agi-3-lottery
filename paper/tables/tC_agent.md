@@ -11,6 +11,22 @@ for the rest of the game. Settings: a 128k-token context window, at most 12k gen
 When the history outgrows the window (or 150 turns), the harness drops the oldest turns in one large cut (about 58k
 tokens; a drain) rather than a few at a time, because any cut at the front invalidates the server's cached prefix.
 
+**The ledger (X6), verbatim.** After each level clear, that turn's message adds: "Before planning, write one line
+starting exactly `Rule for level N:` with the goal, what each control did, and the plan that cleared it (at most 5
+lines). It is kept for the rest of the game, also after older history is dropped." The harness copies that line (up to
+700 characters) and, after every drain, puts this block in front of the first turn it keeps:
+
+```
+=== SOLVED LEVELS (kept for the whole game, also after older history is dropped) ===
+Level N: cleared after K actions. Your rule: <the model's line, or 'not stated'>
+  Last actions before it cleared: <the last actions on that level, at most 20>
+Reuse these where the current level has the same controls; verify with one cheap probe before relying on them.
+=== END SOLVED LEVELS ===
+```
+
+Placing it only after a drain costs no extra prefill, because a drain changes the cached prefix anyway (harness patch
+in kaggle/b12_fb25/b12_fb25.ipynb).
+
 **Slots.** The server runs 10 generation streams, and a gate lets at most 10 games hold one. A game keeps its slot while
 its cached prefix is intact. After a drain its next request must be prefilled anyway, so that is when it hands its slot
 back and competes again with a priority computed from its current state; the highest priority in the queue gets the

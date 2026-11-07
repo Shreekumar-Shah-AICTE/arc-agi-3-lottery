@@ -16,7 +16,7 @@ Run from the repo root; the steps are in `paper/README.md`. In short:
 
 - `paper.pdf`: the paper (final build of `paper/draft/`).
 - `paper/`: text (`draft/`), figures, tables, the Kaggle summary (`writeup/`), the references and the number registry.
-- `paper/notebook/how_many_runs.ipynb`: how many reruns a team needs before it can trust a score difference (CPU only).
+- `paper/notebook/how_many_runs.ipynb`: how many reruns a team needs before it can trust a score difference (CPU only); it also compares two agents on crack cost, checks the crack model on a team's own runs, and gives the cap that permanent walls would set.
 - `analysis/s37`, `analysis/s7`: the analysis scripts and their outputs; `analysis/s37/sealed/` holds the sealed
   predictions with their OpenTimestamps proofs. Sealed files and the scripts that made them are never edited.
 - `analysis/s38`: the SWE-Bench-Verified check of Section 4.8. It uses the resolved-task ids of the public runs of

@@ -46,7 +46,11 @@ first explicit, and the best-of-n view the second.
 by which stochastic search can be evaluated [HoosStutzle98]. Randomized backtracking search has heavy-tailed solve
 times that random restarts remove [Gomes00], and a restart schedule exists within a logarithmic factor of the best one
 when the distribution is unknown [Luby93]; we did not test whether restarting a long attempt on a level helps an LLM
-agent. Our wall share is the cured fraction of a mixture cure model, in which some units never have the event during
+agent. Running several randomized solvers side by side, or splitting one processor among them, is an algorithm portfolio
+[Huberman97] [GomesSelman01], and SATzilla picks a solver per instance from predicted log run times, keeping timed-out runs
+as censored lower bounds [Xu08]. Our scheduler simulations (Section 4.7) ask the portfolio question for games that share
+one token budget; the Gittins index [Gittins79] is the classical rule for splitting effort among independent projects, and
+we did not test it. Our wall share is the cured fraction of a mixture cure model, in which some units never have the event during
 follow-up [BerksonGage52] [Farewell82]; we apply it in generated-token time, with censoring at the end of each run.
 Telling a cured unit from a late event is a known difficulty of these models [MallerZhou96]. For us it is the question
 of whether a wall is a very slow crack (Section 4.3).
@@ -55,7 +59,8 @@ of whether a wall is a very slow crack (Section 4.3).
 two numbers: how many tokens it can generate in the budget (supply) and how many it needs per level (crack cost).
 Comparing crack cost on the same levels is a blocked design, in which level effects cancel as question effects do in
 paired comparisons of evals [Miller24], much as item response models let tinyBenchmarks evaluate language models on far
-fewer items [Polo24]: most of the variance in crack times belongs to the level, not to the run (Section 3.4). It needed
+fewer items [Polo24]: most of the variance in crack times belongs to the level, not to the run (Section 3.4). The estimator itself is standard: a lognormal accelerated-failure-time regression with
+level effects [KalbfleischPrentice80], fitted by EM over the censored attempts [Dempster77]. It needed
 several times fewer runs than raw level counts (about 5 times on our data, at least 2.8; Section 4.6). METR summarizes an
 agent by the task length, in human working time, that it completes half the time [Kwa25]. Our crack cost is the
 agent-side counterpart, and its curve also shows where more budget stops buying (the walls).
